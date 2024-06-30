@@ -1,0 +1,15 @@
+events {}
+
+http {
+    server {
+        listen 80;
+
+        location /app1 {
+            proxy_pass http://custom_network_container1:port;
+        }
+
+        location /app2 {
+            proxy_pass http://custom_network_container2:port;
+        }
+    }
+}

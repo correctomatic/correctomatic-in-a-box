@@ -1,0 +1,37 @@
+---
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+
+- name: Install Docker Compose
+  apt:
+    name: docker-compose
+    state: present
+
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Create Docker config directory
+  file:
+    path: /etc/docker
+    state: directory
+
+- name: Deploy Docker daemon configuration
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+
+- name: Restart Docker to apply changes
+  service:
+    name: docker
+    state: restarted
+
+- name: Create Docker network
+  docker_network:
+    name: custom_network
+    state: present

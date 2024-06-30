@@ -1,0 +1,50 @@
+---
+- name: Create shared volume directory
+  file:
+    path: /srv/shared
+    state: directory
+
+- name: Create PostgreSQL data directory
+  file:
+    path: /srv/postgresql
+    state: directory
+
+- name: Run Docker private registry
+  docker_container:
+    name: registry
+    image: registry:2
+    state: started
+    ports:
+      - "5000:5000"
+
+- name: Run custom container 1
+  docker_container:
+    name: custom_container1
+    image: your_custom_image1
+    state: started
+    networks:
+      - name: custom_network
+    volumes:
+      - /srv/shared:/srv/shared
+
+- name: Run custom container 2
+  docker_container:
+    name: custom_container2
+    image: your_custom_image2
+    state: started
+    networks:
+      - name: custom_network
+    volumes:
+      - /srv/shared:/srv/shared
+
+- name: Run PostgreSQL container
+  docker_container:
+    name: postgres_container
+    image: postgres
+    state: started
+    networks:
+      - name: custom_network
+    volumes:
+      - /srv/postgresql:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: your_password

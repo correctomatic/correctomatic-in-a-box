@@ -3,6 +3,17 @@
 
 ansible-playbook -i hosts playbook.yml
 
+
+## Secrets
+
+echo "ansible_become_password: ansible" > secrets/sudo_password.yml
+
+Encrypt, optional for now:
+ansible-vault encrypt secrets/sudo_password.yml
+
+ansible-playbook -i hosts your_playbook.yml --ask-vault-pass
+ansible-playbook -i hosts your_playbook.yml --vault-password-file ~/.vault_pass.txt
+
 ## Configure virtual machine
 
 correctomatic_vps in hosts file

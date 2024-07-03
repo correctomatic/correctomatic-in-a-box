@@ -1,0 +1,15 @@
+---
+- name: Install Certbot
+  apt:
+    name: certbot
+    state: present
+    update_cache: yes
+
+- name: Obtain SSL certificate from Let's Encrypt
+  command: >
+    certbot certonly --non-interactive --agree-tos --email {{ lets_encrypt_email }}
+    --standalone -d {{ docker_registry_domain }}
+  environment:
+    PATH: "{{ ansible_env.PATH }}"
+  args:
+    creates: "/etc/letsencrypt/live/{{ docker_registry_domain }}/fullchain.pem"

@@ -1,16 +1,4 @@
+# Assumes that docker is already installed
 ---
-- name: Install Nginx
-  apt:
-    name: nginx
-    state: present
-
-- name: Deploy Nginx configuration
-  template:
-    src: nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
-
-- name: Ensure Nginx service is running
-  service:
-    name: nginx
-    state: started
-    enabled: true
+- include_tasks: setup_nginx.yml
+# - include_tasks: setup_certificates.yml

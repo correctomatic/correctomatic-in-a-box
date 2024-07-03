@@ -1,3 +1,10 @@
+## TO-DO
+
+registry service:
+  - nginx: proxypass to container
+  - Configure let's encrypt
+  - Create users for the registry service
+
 
 ## Run playbook
 

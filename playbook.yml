@@ -3,11 +3,19 @@
   become: true
   become_method: sudo
   vars_files:
+    - configuration/config.yml
     - secrets/sudo_password.yml
     - secrets/redis_password.yml
+
+  # tasks:
+  #   - name: Include docker-registry-role
+  #     include_role:
+  #       name: nginx
+  #     vars:
+  #       docker-registry-domain: "{{ docker_registry_domain }}"
   roles:
     # - docker
-    - docker-registry
-    # - nginx
+    # - docker-registry
+    - nginx
     # - redis
     # - containers

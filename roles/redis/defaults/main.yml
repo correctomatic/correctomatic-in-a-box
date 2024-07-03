@@ -1,0 +1,10 @@
+# To get the versions, run:
+# apt-cache policy redis-server
+redis_version: "5:7.0.*"
+
+# Configuration file parameters
+redis_append_only: "yes"
+redis_port: 6379
+# redis_bind_address: "127.0.0.1"
+# DEBUG
+redis_bind_address: "0.0.0.0 ::1"

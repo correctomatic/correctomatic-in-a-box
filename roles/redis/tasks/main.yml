@@ -1,0 +1,28 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Redis
+  apt:
+    name: redis-server={{ redis_version }}
+    state: present
+
+- name: Ensure Redis is running
+  systemd:
+    name: redis-server
+    state: started
+    enabled: yes
+
+- name: Copy Redis configuration file
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis/redis.conf
+    owner: redis
+    group: redis
+    mode: '0640'
+
+- name: Restart Redis to apply configuration changes
+  systemd:
+    name: redis-server
+    state: restarted

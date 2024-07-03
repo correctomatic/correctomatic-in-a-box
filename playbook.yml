@@ -4,7 +4,9 @@
   become_method: sudo
   vars_files:
     - secrets/sudo_password.yml
+    - secrets/redis_password.yml
   roles:
-    - docker
-    - nginx
-    - containers
+    # - docker
+    # - nginx
+    - redis
+    # - containers

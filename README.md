@@ -62,3 +62,12 @@ You need an already installed VBox installation
 VBoxManage startvm $VM_NAME --type headless
 ssh -p 2222 vagrant@localhost
 
+
+
+### Redis server
+
+https://github.com/jprichardson/ansible-redis
+
+https://github.com/geerlingguy/ansible-role-redis
+
+

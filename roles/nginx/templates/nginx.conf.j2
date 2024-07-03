@@ -5,11 +5,11 @@ http {
         listen 80;
 
         location /app1 {
-            proxy_pass http://custom_network_container1:port;
+            proxy_pass http://localhost:1111;
         }
 
         location /app2 {
-            proxy_pass http://custom_network_container2:port;
+            proxy_pass http://localhost:2222;
         }
     }
 }

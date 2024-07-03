@@ -1,0 +1,22 @@
+---
+# - name: Pull Docker registry image
+#   docker_image:
+#     name: registry
+#     tag: latest
+
+- name: Pull an image
+  # community.docker.docker_image:
+  docker_image:
+    name: registry:latest
+    source: pull
+    # Select platform for pulling. If not specified, will pull whatever docker prefers.
+    pull:
+      platform: amd64
+
+- name: Start Docker registry container
+  docker_container:
+    name: docker_registry
+    image: registry:latest
+    ports:
+      - "{{ docker_registry_port }}:5000"
+    restart_policy: always

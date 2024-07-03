@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: docker }  # Replace with the name of your Docker installation role

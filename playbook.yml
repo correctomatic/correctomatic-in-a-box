@@ -7,6 +7,7 @@
     - secrets/redis_password.yml
   roles:
     # - docker
+    - docker-registry
     # - nginx
-    - redis
+    # - redis
     # - containers

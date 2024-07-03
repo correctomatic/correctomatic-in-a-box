@@ -1,0 +1,14 @@
+---
+- name: Create Docker registry users
+  shell: |
+    docker run --rm --entrypoint htpasswd registry:latest -Bbn {{ item.username }} {{ item.password }}
+  loop: "{{ docker_registry_users }}"
+  register: htpasswd_output
+  changed_when: false
+
+- name: Add users to Docker registry
+  community.docker.docker_compose_v2:
+    command: create
+    options: --htpasswd ./htpasswd {{ item.item.username }}
+  loop: "{{ htpasswd_output.results }}"
+  when: htpasswd_output is defined

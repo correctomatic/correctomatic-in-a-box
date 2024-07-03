@@ -25,11 +25,7 @@
   template:
     src: daemon.json.j2
     dest: /etc/docker/daemon.json
-
-- name: Restart Docker to apply changes
-  service:
-    name: docker
-    state: restarted
+  notify: Restart Docker
 
 - name: Create Docker network
   docker_network:

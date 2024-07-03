@@ -71,3 +71,5 @@ https://github.com/jprichardson/ansible-redis
 https://github.com/geerlingguy/ansible-role-redis
 
 
+Debug tools:
+net-tools

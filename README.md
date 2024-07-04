@@ -80,3 +80,14 @@ https://github.com/geerlingguy/ansible-role-redis
 
 Debug tools:
 net-tools
+
+## Certbot
+
+**When testing the playbook, you need to redirect the domain to the virtual machine.**
+
+https://serverfault.com/questions/750902/how-to-use-lets-encrypt-dns-01-challenge-validation
+
+
+certbot -d bristol3.pki.enigmabridge.com --manual --preferred-challenges dns certonly
+
+certbot --text --agree-tos --email you@example.com -d bristol3.pki.enigmabridge.com --manual --preferred-challenges dns --expand --renew-by-default  --manual-public-ip-logging-ok certonly

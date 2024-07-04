@@ -1,4 +1,6 @@
 # Assumes that docker is already installed
 ---
 - include_tasks: setup_nginx.yml
-# - include_tasks: setup_certificates.yml
+- include_tasks: setup_certificates.yml
+- include_tasks: self_signed_certificates.yml
+  when: environment == "development"

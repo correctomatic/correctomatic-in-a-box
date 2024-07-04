@@ -1,0 +1,29 @@
+---
+- name: Create directory for SSL certificates
+  file:
+    path: "/etc/ssl/{{ docker_registry_domain }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Generate SSL private key
+  openssl_privatekey:
+    path: "/etc/ssl/{{ docker_registry_domain }}/privkey.pem"
+    size: 4096
+
+- name: Generate SSL certificate signing request (CSR)
+  openssl_csr:
+    path: "/etc/ssl/{{ docker_registry_domain }}/cert.csr"
+    privatekey_path: "/etc/ssl/{{ docker_registry_domain }}/privkey.pem"
+    common_name: "{{ docker_registry_domain }}"
+    state: present
+
+- name: Generate Self-Signed SSL certificate
+  openssl_certificate:
+    path: "/etc/ssl/{{ docker_registry_domain }}/fullchain.pem"
+    privatekey_path: "/etc/ssl/{{ docker_registry_domain }}/privkey.pem"
+    csr_path: "/etc/ssl/{{ docker_registry_domain }}/cert.csr"
+    provider: selfsigned
+    days: 3650  # Validity period in days (e.g., 10 years)
+    state: present

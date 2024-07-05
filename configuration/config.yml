@@ -5,7 +5,7 @@ running_environment: "development"
 #   api: foo
 #   registry: foo
 
-docker_registry_domain: "registry.correctomatic.alvaromaceda.es"
+registry_domain: "registry.correctomatic.alvaromaceda.es"
 correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"
 

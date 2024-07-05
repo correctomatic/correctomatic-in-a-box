@@ -8,9 +8,9 @@
 - name: Obtain SSL certificate from Let's Encrypt
   command: >
     certbot certonly --non-interactive --agree-tos --email {{ lets_encrypt_email }}
-    --standalone -d {{ docker_registry_domain }}
+    --standalone -d {{ registry_domain }}
   environment:
     PATH: "{{ ansible_env.PATH }}"
   args:
-    creates: "/etc/letsencrypt/live/{{ docker_registry_domain }}/fullchain.pem"
+    creates: "/etc/letsencrypt/live/{{ registry_domain }}/fullchain.pem"
   when: running_environment != "development"

@@ -11,9 +11,9 @@
     - name: Print the environment configuration
       debug:
         msg: "Launching in mode: {{ running_environment }}"
-    - name: Print the value of docker_registry_domain
+    - name: Print the value of registry_domain
       debug:
-        msg: "The value of docker_registry_domain is {{ docker_registry_domain }}"
+        msg: "The value of registry_domain is {{ registry_domain }}"
 
   tasks:
     - name: Install utility packages

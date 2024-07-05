@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name {{ docker_registry_domain }};
+    server_name {{ registry_domain }};
 
     location / {
         return 301 https://$host$request_uri;
@@ -9,10 +9,10 @@ server {
 
 server {
     listen 443 ssl;
-    server_name {{ docker_registry_domain }};
+    server_name {{ registry_domain }};
 
-    ssl_certificate /etc/letsencrypt/live/{{ docker_registry_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ docker_registry_domain }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ registry_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ registry_domain }}/privkey.pem;
 
     # SSL Configuration
     ssl_protocols TLSv1.2 TLSv1.3;

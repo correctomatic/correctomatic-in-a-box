@@ -19,3 +19,6 @@
     ports:
       - "{{ docker_registry_port }}:5000"
     restart_policy: always
+    env:
+      AUTH_HTPASSWD_REALM: Correctomatic Registry
+      AUTH_HTPASSWD_PATH: {{ httpasswd_file}}

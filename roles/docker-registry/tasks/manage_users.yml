@@ -1,14 +1,24 @@
 ---
-- name: Create Docker registry users
-  shell: |
-    docker run --rm --entrypoint htpasswd registry:latest -Bbn {{ item.username }} {{ item.password }}
-  loop: "{{ docker_registry_users }}"
-  register: htpasswd_output
-  changed_when: false
+- name: Install apache2-utils if not present
+  ansible.builtin.package:
+    name: apache2-utils
+    state: present
 
-- name: Add users to Docker registry
-  community.docker.docker_compose_v2:
-    command: create
-    options: --htpasswd ./htpasswd {{ item.item.username }}
-  loop: "{{ htpasswd_output.results }}"
-  when: htpasswd_output is defined
+# MUST recreate the htpasswd file each time, because if not,
+# old users will be here
+- name: Remove existing htpasswd file
+  ansible.builtin.file:
+    path: "{{ htpasswd_file }}"
+    state: absent
+
+- name: Ensure the htpasswd file exists
+  ansible.builtin.file:
+    path: "{{ htpasswd_file }}"
+    state: touch
+    mode: '0600'
+
+- name: Add users to htpasswd file
+  ansible.builtin.command:
+    cmd: htpasswd -b "{{ htpasswd_file }}" "{{ item.username }}" "{{ item.password }}"
+  loop: "{{ docker_registry_users }}"
+  no_log: true

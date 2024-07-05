@@ -117,7 +117,8 @@ certbot --text --agree-tos --email you@example.com -d bristol3.pki.enigmabridge.
 
 Test that registry works:
 ```bash
-curl --insecure -X GET https://$REGISTRY_DOMAIN:5000/v2/_catalog
+REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+curl --insecure -X GET https://$REGISTRY_DOMAIN/v2/_catalog
 ```
 
 ### Prepare your local machine to work with the registry
@@ -132,85 +133,38 @@ sudo mkdir -p /etc/docker/certs.d/$REGISTRY_DOMAIN
 openssl s_client -showcerts -connect $REGISTRY_DOMAIN:443 </dev/null 2>/dev/null | openssl x509 -outform PEM > /tmp/$REGISTRY_DOMAIN.crt
 
 sudo cp /tmp/$REGISTRY_DOMAIN.crt /etc/docker/certs.d/$REGISTRY_DOMAIN/
+```
+
+Registry configuration:
+https://distribution.github.io/distribution/about/configuration/
 
 
 
 
+REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/somewhere
+AUTH_HTPASSWD_REALM=/somewhere
+AUTH_HTPASSWD_PATH=/somewhere
+
+auth:
+  htpasswd:
+    realm: basic-realm
+    path: /path/to/htpasswd
 
 
+https://distribution.github.io/distribution/about/deploying/
+Pull the ubuntu:16.04 image from Docker Hub.
 
+$ docker pull ubuntu:16.04
+Tag the image as localhost:5000/my-ubuntu. This creates an additional tag for the existing image. When the first part of the tag is a hostname and port, Docker interprets this as the location of a registry, when pushing.
 
-sudo mkdir -p /etc/docker/certs.d/registry.correctomatic.alvaromaceda.es
+$ docker tag ubuntu:16.04 localhost:5000/my-ubuntu
+Push the image to the local registry running at localhost:5000:
 
-openssl s_client -showcerts -connect registry.correctomatic.alvaromaceda.es:443 </dev/null 2>/dev/null | openssl x509 -outform PEM > /etc/docker/certs.d/registry.correctomatic.alvaromaceda.es/
+$ docker push localhost:5000/my-ubuntu
+Remove the locally-cached ubuntu:16.04 and localhost:5000/my-ubuntu images, so that you can test pulling the image from your registry. This does not remove the localhost:5000/my-ubuntu image from your registry.
 
-sudo cp registry.correctomatic.alvaromaceda.es.crt /etc/docker/certs.d/registry.correctomatic.alvaromaceda.es/
+$ docker image remove ubuntu:16.04
+$ docker image remove localhost:5000/my-ubuntu
+Pull the localhost:5000/my-ubuntu image from your local registry.
 
-
-
-
-
-REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
-
-openssl s_client -showcerts -connect registry.correctomatic.alvaromaceda.es:443 </dev/null 2>/dev/null | openssl x509 -outform PEM > registry.correctomatic.alvaromaceda.es.crt
-
-
-
-
-docker manifest inspect registry.correctomatic.alvaromaceda.es/banana
-docker login --insecure-registry=registry.correctomatic.alvaromaceda.es
-
-
-Prepare certificates in your dev machine:
-
-1) Copy the certificates to your dev machine
-
-
-
-
-
-mkdir -p /etc/docker/certs.d/$REGISTRY_DOMAIN:5000
-scp ansible@correctomatic_vps:/etc/letsencrypt/live/$REGISTRY_DOMAIN/fullchain.pem /tmp/correctomatic_registry.crt
-
-mkdir -p /etc/docker/certs.d/registry.local.doc:5000/ca.crt
-sudo cp tls.crt /etc/docker/certs.d/registry.local.doc:5000/ca.crt
-
-
-sudo mkdir certs.d
-
-
-openssl x509 -outform der -in certificate.pem -out certificate.der
-
-You will need to copy the certificate to the client machine, and add it to the docker configuration:
-sudo cp registry.crt /usr/local/share/ca-certificates/
-sudo update-ca-certificates
-sudo systemctl restart docker
-
-scp <username>@<docker_host_ip>:/path/to/certificates/fullchain.pem /path/on/your/local/machine/
-
-$mkdir -p /etc/docker/certs.d/ip_address:5000
-$cp docker_reg_certs/domain.crt /etc/docker/certs.d/ip_address:5000/ca.crt
-$cp docker_reg_certs/domain.crt /usr/local/share/ca-certificates/ca.crt
-$update-ca-certificates
-
-
-https://stackoverflow.com/questions/74727327/insecure-docker-registry-and-self-signed-certificates
-
-When you using self-sign cert registry, you have two way to pull image from there.
-
-1) Add { "insecure-registries" : ["registry.local.doc:5000"] } to /etc/docker/daemon.json
-
-2) Add your self-sign cert to trust store on every woker. This way don't require restart k3s. For ubuntu see below.
-
-sudo cp tls.crt /usr/local/share/ca-certificates
-sudo update-ca-certificates
-
-3) add cert to docker certs folder
-
-Instruct every Docker daemon to trust that certificate. The way to do this depends on your OS.
-Linux: Copy the domain.crt file to /etc/docker/certs.d/myregistrydomain.com:5000/ca.crt on every Docker host. You do not need to restart Docker.
-
-sudo cp tls.crt /etc/docker/certs.d/registry.local.doc:5000/ca.crt
-
-
-/etc/letsencrypt/live/registry.correctomatic.alvaromaceda.es/fullchain.pem
+$ docker pull localhost:5000/my-ubuntu

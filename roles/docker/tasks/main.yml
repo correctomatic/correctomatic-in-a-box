@@ -21,10 +21,11 @@
     path: /etc/docker
     state: directory
 
-- name: Deploy Docker daemon configuration
-  template:
-    src: daemon.json.j2
-    dest: /etc/docker/daemon.json
-  notify: Restart Docker
+# This is for insecure registries
+# - name: Deploy Docker daemon configuration
+#   template:
+#     src: daemon.json.j2
+#     dest: /etc/docker/daemon.json
+#   notify: Restart Docker
 
 

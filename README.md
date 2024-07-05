@@ -1,9 +1,10 @@
 ## TO-DO
 
 registry service:
-  - nginx: proxypass to container
-  - Configure let's encrypt
   - Create users for the registry service
+  - Bind htpasswd file
+  - Bind mount volume for storing the data
+  - Check the blob error
 
 
 ## Run playbook
@@ -124,6 +125,7 @@ curl --insecure -X GET https://$REGISTRY_DOMAIN/v2/_catalog
 ### Prepare your local machine to work with the registry
 
 Docker needs to trust the self-signed certificate used by the virtual machine. You won't need this in production because you will have a real certificate.
+**YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE GENERATED**
 
 ```bash
 REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
@@ -139,18 +141,7 @@ Registry configuration:
 https://distribution.github.io/distribution/about/configuration/
 
 
-
-
-REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/somewhere
-AUTH_HTPASSWD_REALM=/somewhere
-AUTH_HTPASSWD_PATH=/somewhere
-
-auth:
-  htpasswd:
-    realm: basic-realm
-    path: /path/to/htpasswd
-
-
+**Check this:**
 https://distribution.github.io/distribution/about/deploying/
 Pull the ubuntu:16.04 image from Docker Hub.
 
@@ -168,3 +159,15 @@ $ docker image remove localhost:5000/my-ubuntu
 Pull the localhost:5000/my-ubuntu image from your local registry.
 
 $ docker pull localhost:5000/my-ubuntu
+
+
+```bash
+REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+
+docker pull alpine:latest
+docker tag alpine:latest $REGISTRY_DOMAIN/my-test
+
+docker login $REGISTRY_DOMAIN
+docker push $REGISTRY_DOMAIN/my-test
+docker pull $REGISTRY_DOMAIN/my-test
+```

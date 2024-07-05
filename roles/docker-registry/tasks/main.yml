@@ -1,4 +1,4 @@
 # Assumes that docker is already installed
 ---
 - include_tasks: setup_registry.yml
-# - include_tasks: manage_users.yml
+- include_tasks: manage_users.yml

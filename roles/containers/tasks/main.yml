@@ -9,13 +9,10 @@
     path: /srv/postgresql
     state: directory
 
-- name: Run Docker private registry
-  docker_container:
-    name: registry
-    image: registry:2
-    state: started
-    ports:
-      - "5000:5000"
+- name: Create Docker network
+  docker_network:
+    name: custom_network
+    state: present
 
 - name: Run custom container 1
   docker_container:

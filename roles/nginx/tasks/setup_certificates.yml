@@ -13,4 +13,4 @@
     PATH: "{{ ansible_env.PATH }}"
   args:
     creates: "/etc/letsencrypt/live/{{ docker_registry_domain }}/fullchain.pem"
-  when: environment != "development"
+  when: running_environment != "development"

@@ -7,15 +7,22 @@
     - secrets/sudo_password.yml
     - secrets/redis_password.yml
 
-  # tasks:
-  #   - name: Include docker-registry-role
-  #     include_role:
-  #       name: nginx
-  #     vars:
-  #       docker-registry-domain: "{{ docker_registry_domain }}"
+  tasks:
+    - name: Print the environment configuration
+      debug:
+        msg: "Launching in mode: {{ docker_registry_domain }}"
+
+    - name: Install utility packages
+      apt:
+        pkg:
+          - net-tools
+          - vim
+        state: present
+        update_cache: yes
+
   roles:
-    # - docker
-    # - docker-registry
+    - docker
+    - docker-registry
     - nginx
-    # - redis
+    - redis
     # - containers

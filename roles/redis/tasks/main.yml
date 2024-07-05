@@ -1,4 +1,9 @@
 ---
+- name: Bind to all addresses if launched in development mode
+  set_fact:
+    redis_bind_address: "0.0.0.0 ::1"
+  when: running_environment == "development"
+
 - name: Update apt cache
   apt:
     update_cache: yes
@@ -21,8 +26,6 @@
     owner: redis
     group: redis
     mode: '0640'
+  notify: Restart Redis
 
-- name: Restart Redis to apply configuration changes
-  systemd:
-    name: redis-server
-    state: restarted
+

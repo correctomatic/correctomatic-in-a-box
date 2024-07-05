@@ -27,7 +27,4 @@
     dest: /etc/docker/daemon.json
   notify: Restart Docker
 
-- name: Create Docker network
-  docker_network:
-    name: custom_network
-    state: present
+

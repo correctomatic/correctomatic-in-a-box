@@ -1,5 +1,9 @@
 # Some task can't be executed in a dev environment, ie, certbot
-environment: "development"
+running_environment: "development"
+
+# domains:
+#   api: foo
+#   registry: foo
 
 docker_registry_domain: "registry.correctomatic.alvaromaceda.es"
 correctomatic_app_domain: "correctomatic.alvaromaceda.es"

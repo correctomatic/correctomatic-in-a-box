@@ -8,8 +8,22 @@ registry service:
 
 ## Run playbook
 
-ansible-playbook -i hosts playbook.yml
+ansible-playbook playbook.yml
 
+ansible-playbook -i a_different_hosts_file playbook.yml
+
+
+## Redis insights
+
+This will work only when testing in local, 
+
+Create volume for persisting connections:
+`docker volume create redisinsight`
+
+Warning, the container is running in host's network, be careful with this:
+`docker run --rm --name redis_insight -v redisinsight:/data --network host redis/redisinsight`
+
+http://localhost:5540/
 
 ## Secrets
 
@@ -91,3 +105,9 @@ https://serverfault.com/questions/750902/how-to-use-lets-encrypt-dns-01-challeng
 certbot -d bristol3.pki.enigmabridge.com --manual --preferred-challenges dns certonly
 
 certbot --text --agree-tos --email you@example.com -d bristol3.pki.enigmabridge.com --manual --preferred-challenges dns --expand --renew-by-default  --manual-public-ip-logging-ok certonly
+
+
+
+## Slow tasks
+- Install docker, extremly slow
+- Install certbot, slow

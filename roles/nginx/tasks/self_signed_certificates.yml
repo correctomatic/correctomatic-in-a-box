@@ -1,4 +1,14 @@
 ---
+- name: Check if private key exists
+  stat:
+    path: "/etc/ssl/{{ docker_registry_domain }}/privkey.pem"
+  register: privkey_stat
+
+- name: Check if certificate exists
+  stat:
+    path: "/etc/ssl/{{ docker_registry_domain }}/fullchain.pem"
+  register: cert_stat
+
 - name: Create directory for SSL certificates
   file:
     path: "/etc/ssl/{{ docker_registry_domain }}"
@@ -6,11 +16,13 @@
     mode: 0755
     owner: root
     group: root
+  when: not privkey_stat.stat.exists or not cert_stat.stat.exists
 
 - name: Generate SSL private key
   openssl_privatekey:
     path: "/etc/ssl/{{ docker_registry_domain }}/privkey.pem"
     size: 4096
+  when: not privkey_stat.stat.exists or not cert_stat.stat.exists
 
 - name: Generate SSL certificate signing request (CSR)
   openssl_csr:
@@ -18,6 +30,7 @@
     privatekey_path: "/etc/ssl/{{ docker_registry_domain }}/privkey.pem"
     common_name: "{{ docker_registry_domain }}"
     state: present
+  when: not privkey_stat.stat.exists or not cert_stat.stat.exists
 
 - name: Generate Self-Signed SSL certificate
   openssl_certificate:
@@ -25,5 +38,7 @@
     privatekey_path: "/etc/ssl/{{ docker_registry_domain }}/privkey.pem"
     csr_path: "/etc/ssl/{{ docker_registry_domain }}/cert.csr"
     provider: selfsigned
-    days: 3650  # Validity period in days (e.g., 10 years)
+    # 3650 => 10 years from now
+    selfsigned_not_after: "{{ lookup('pipe', 'date -d ' ~ 3650 ~ 'days +%Y%m%d%H%M%SZ') }}"
     state: present
+  when: not privkey_stat.stat.exists or not cert_stat.stat.exists

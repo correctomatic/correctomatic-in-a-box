@@ -4,14 +4,11 @@
     redis_bind_address: "0.0.0.0 ::1"
   when: running_environment == "development"
 
-- name: Update apt cache
-  apt:
-    update_cache: yes
-
 - name: Install Redis
   apt:
     name: redis-server={{ redis_version }}
     state: present
+    update_cache: yes
 
 - name: Ensure Redis is running
   systemd:

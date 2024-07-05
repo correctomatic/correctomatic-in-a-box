@@ -1,9 +1,4 @@
-
 ---
-- name: Print the value of docker_registry_domain
-  debug:
-    msg: "The value of docker_registry_domain is {{ docker_registry_domain }}"
-
 - name: Install Nginx
   apt:
     name: nginx
@@ -24,8 +19,9 @@
   notify: Reload Nginx
 
 # Debug
-# - name: Remove default Nginx site
-#   file:
-#     path: /etc/nginx/sites-enabled/default
-#     state: absent
-#   notify: Reload Nginx
+- name: Remove default Nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload Nginx
+  when: running_environment != "development"

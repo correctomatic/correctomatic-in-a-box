@@ -11,8 +11,27 @@
     pull:
       platform: amd64
 
-- name: Create the data directory
-  
+- name: Create directory for docker data
+  file:
+    path: "{{ registry.data_directory }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Create directory for registry configuration
+  file:
+    path: /etc/docker/registry/
+    state: directory
+    mode: 0750
+    owner: root
+    group: root
+
+- name: Copy configuration file
+  template:
+    src: config.yml.j2
+    dest: /etc/docker/registry/config.yml
+  notify: Restart Docker registry
 
 - name: Start Docker registry container
   docker_container:
@@ -21,6 +40,32 @@
     ports:
       - "{{ docker_registry_port }}:5000"
     restart_policy: always
+    mounts:
+      - type: bind
+        source: "{{ htpasswd_file}}"
+        target: "{{ htpasswd_file}}"
+        read_only: yes
+      - type: bind
+        source: "{{ registry.data_directory }}"
+        target: /var/lib/registry
+        read_only: no
+      - type: bind
+        source: /etc/docker/registry/config.yml
+        target: /etc/docker/registry/config.yml
+        read_only: yes
+    # This is for changing the values temporarily
+    # For permanent changes, modify the template
     env:
-      AUTH_HTPASSWD_REALM: Correctomatic Registry
-      AUTH_HTPASSWD_PATH: "{{ htpasswd_file}}"
+      # REGISTRY_AUTH_HTPASSWD_REALM: Correctomatic Registry
+      # REGISTRY_AUTH_HTPASSWD_PATH: "{{ htpasswd_file}}"
+      # REGISTRY_HTTP_SECRET: banana
+      REGISTRY_LOG_LEVEL: debug
+      REGISTRY_LOG_FORMATTER: json # Options are text, json, and logstash
+      # REGISTRY_DELETE_ENABLED: "true"
+      # REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+      # REGISTRY_AUTH: htpasswd
+      # REGISTRY_AUTH_HTPASSWD_REALM: Registry
+      # REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.password
+# auth:
+#   htpasswd:
+#     realm: Correctomatic Registry

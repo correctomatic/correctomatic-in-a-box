@@ -141,6 +141,9 @@ Registry configuration:
 https://distribution.github.io/distribution/about/configuration/
 
 
+https://phoenixnap.com/kb/set-up-a-private-docker-registry
+
+
 **Check this:**
 https://distribution.github.io/distribution/about/deploying/
 Pull the ubuntu:16.04 image from Docker Hub.
@@ -171,3 +174,40 @@ docker login $REGISTRY_DOMAIN
 docker push $REGISTRY_DOMAIN/my-test
 docker pull $REGISTRY_DOMAIN/my-test
 ```
+
+
+
+Tests in local:
+-----------------------
+
+docker run --rm -p 5000:5000 -e REGISTRY_HTTP_SECRET=banana registry:latest
+docker run --rm -p 5000:5000 --name docker_registry_2 -e REGISTRY_HTTP_SECRET=banana registry:latest
+
+REGISTRY_DOMAIN=localhost:5000
+REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es:5000
+
+docker tag alpine:latest $REGISTRY_DOMAIN/my-test
+
+docker login $REGISTRY_DOMAIN
+docker push $REGISTRY_DOMAIN/my-test
+docker pull $REGISTRY_DOMAIN/my-test
+
+
+https://serverfault.com/questions/911360/docker-nginx-reverse-proxy-configuration
+
+
+- Sólo falla el push, el pull funciona
+- Si se hace en local contra localhost:5000 funciona
+
+
+## Info about the API
+
+"repos" are the images
+
+Get images: /v2/_catalog
+Get tags of a image: /v2/:repo/tags/list
+
+Delete images from registry:
+https://stackoverflow.com/questions/25436742/how-to-delete-images-from-a-private-docker-registry
+https://azizunsal.github.io/blog/post/delete-images-from-private-docker-registry/

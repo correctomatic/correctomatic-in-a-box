@@ -7,6 +7,7 @@
     - secrets/sudo_password.yml
     - secrets/redis_password.yml
     - secrets/registry_users.yml
+    - secrets/registry_secret.yml
 
   pre_tasks:
     - name: Print the environment configuration

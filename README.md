@@ -212,3 +212,10 @@ Get tags of a image: /v2/:repo/tags/list
 Delete images from registry:
 https://stackoverflow.com/questions/25436742/how-to-delete-images-from-a-private-docker-registry
 https://azizunsal.github.io/blog/post/delete-images-from-private-docker-registry/
+
+CHECK THIS FOR THE REGISTRY:
+https://medium.com/@haminhsang1903/private-docker-registry-with-https-and-a-nginx-reverse-proxy-using-docker-compose-6c1335c5e820
+
+      REGISTRY_HTTP_ADDR: 0.0.0.0:5000
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/domain.key

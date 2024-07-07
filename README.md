@@ -5,6 +5,7 @@ registry service:
   - Bind htpasswd file
   - Bind mount volume for storing the data
   - Check the blob error
+  - Delete images, why doesn't work
 
 
 ## Run playbook

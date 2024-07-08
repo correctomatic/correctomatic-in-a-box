@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name {{ registry_domain }};
+    server_name {{ registry.domain }};
 
     location / {
         return 301 https://$host$request_uri;
@@ -9,10 +9,10 @@ server {
 
 server {
     listen 443 ssl;
-    server_name {{ registry_domain }};
+    server_name {{ registry.domain }};
 
-    ssl_certificate /etc/letsencrypt/live/{{ registry_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ registry_domain }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ registry.domain }}/privkey.pem;
 
     # Maximum file upload size
     client_max_body_size 2G;
@@ -35,7 +35,7 @@ server {
         # These headers are required for Docker to trust the registry
         # certificate and enable client-side certificate validation
         proxy_ssl_verify on;
-        proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry_domain }}/fullchain.pem;
+        proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
         proxy_ssl_session_reuse off;
     }
 }

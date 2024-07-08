@@ -1,2 +1,2 @@
 ---
-htpasswd_file: /etc/docker/httpasswd
+htpasswd_file: /etc/docker/htpasswd

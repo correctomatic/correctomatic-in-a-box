@@ -9,7 +9,7 @@ registry:
 
 
 # This is the internal port for the registry, it's accessible in port 443 at registry domain
-registry_domain: "registry.correctomatic.alvaromaceda.es"
+registry.domain: "registry.correctomatic.alvaromaceda.es"
 docker_registry_port: 5000  # Default port for Docker registry
 
 

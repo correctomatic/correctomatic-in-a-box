@@ -9,12 +9,19 @@ storage:
     rootdirectory: /var/lib/registry
 http:
   addr: :5000
+  host: {{ registry.domain }}
   headers:
     X-Content-Type-Options: [nosniff]
   secret: {{ registry_secret_key }}
 
+auth:
+  htpasswd:
+    realm: Correctomatic registry
+    path: {{ htpasswd_file }}
+
 delete:
   enabled: true
+
 health:
   storagedriver:
     enabled: true

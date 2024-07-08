@@ -56,15 +56,9 @@
     # This is for changing the values temporarily
     # For permanent changes, modify the template
     env:
-      # REGISTRY_AUTH_HTPASSWD_REALM: Correctomatic Registry
-      # REGISTRY_AUTH_HTPASSWD_PATH: "{{ htpasswd_file}}"
-      # REGISTRY_HTTP_SECRET: banana
       REGISTRY_LOG_LEVEL: debug
       REGISTRY_LOG_FORMATTER: json # Options are text, json, and logstash
       # REGISTRY_DELETE_ENABLED: "true"
-      # REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
-      # REGISTRY_AUTH: htpasswd
-      # REGISTRY_AUTH_HTPASSWD_REALM: Registry
       # REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.password
 # auth:
 #   htpasswd:

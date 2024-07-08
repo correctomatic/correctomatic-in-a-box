@@ -1,7 +1,7 @@
 ---
 - name: Create directory for SSL certificates
   file:
-    path: "/etc/letsencrypt/live/{{ registry_domain }}"
+    path: "/etc/letsencrypt/live/{{ registry.domain }}"
     state: directory
     mode: 0755
     owner: root
@@ -10,21 +10,21 @@
 # Ansible doesn't generate certificates if they already exist
 - name: Generate SSL private key
   openssl_privatekey:
-    path: "/etc/letsencrypt/live/{{ registry_domain }}/privkey.pem"
+    path: "/etc/letsencrypt/live/{{ registry.domain }}/privkey.pem"
     size: 4096
 
 - name: Generate SSL certificate signing request (CSR)
   openssl_csr:
-    path: "/etc/letsencrypt/live/{{ registry_domain }}/cert.csr"
-    privatekey_path: "/etc/letsencrypt/live/{{ registry_domain }}/privkey.pem"
-    common_name: "{{ registry_domain }}"
+    path: "/etc/letsencrypt/live/{{ registry.domain }}/cert.csr"
+    privatekey_path: "/etc/letsencrypt/live/{{ registry.domain }}/privkey.pem"
+    common_name: "{{ registry.domain }}"
     state: present
 
 - name: Generate Self-Signed SSL certificate
   openssl_certificate:
-    path: "/etc/letsencrypt/live/{{ registry_domain }}/fullchain.pem"
-    privatekey_path: "/etc/letsencrypt/live/{{ registry_domain }}/privkey.pem"
-    csr_path: "/etc/letsencrypt/live/{{ registry_domain }}/cert.csr"
+    path: "/etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem"
+    privatekey_path: "/etc/letsencrypt/live/{{ registry.domain }}/privkey.pem"
+    csr_path: "/etc/letsencrypt/live/{{ registry.domain }}/cert.csr"
     provider: selfsigned
     # 3650 => 10 years from now
     selfsigned_not_after: "{{ lookup('pipe', 'date -d ' ~ 3650 ~ 'days +%Y%m%d%H%M%SZ') }}"

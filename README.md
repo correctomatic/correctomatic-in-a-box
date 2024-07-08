@@ -4,7 +4,6 @@ registry service:
   - Create users for the registry service
   - Bind htpasswd file
   - Bind mount volume for storing the data
-  - Check the blob error
   - Delete images, why doesn't work
 
 
@@ -75,6 +74,21 @@ sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install ansible
 
+### Prepare your local machine to work with the registry
+
+Docker needs to trust the self-signed certificate used by the virtual machine. You won't need this in production because you will have a real certificate.
+**YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
+
+```bash
+REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+
+sudo mkdir -p /etc/docker/certs.d/$REGISTRY_DOMAIN
+
+openssl s_client -showcerts -connect $REGISTRY_DOMAIN:443 </dev/null 2>/dev/null | openssl x509 -outform PEM > /tmp/$REGISTRY_DOMAIN.crt
+
+sudo cp /tmp/$REGISTRY_DOMAIN.crt /etc/docker/certs.d/$REGISTRY_DOMAIN/
+```
+
 ## Testing with virtual box
 
 You need an already installed VBox installation
@@ -123,20 +137,15 @@ REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
 curl --insecure -X GET https://$REGISTRY_DOMAIN/v2/_catalog
 ```
 
-### Prepare your local machine to work with the registry
+### Registry notes
 
-Docker needs to trust the self-signed certificate used by the virtual machine. You won't need this in production because you will have a real certificate.
-**YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE GENERATED**
+openssl passwd -apr1 -salt N2Kx8OeF pass1
 
-```bash
-REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+user1:$apr1$2T2gZjCU$w/yvTwnIlGboHjY45BL3C0
+user2:$apr1$gh4CrWNs$lCepmELnNvJHD24YDxfIv/
+user3:$apr1$.W/QG0N9$oI824dpbk7KscaWWd/iu9.
 
-sudo mkdir -p /etc/docker/certs.d/$REGISTRY_DOMAIN
 
-openssl s_client -showcerts -connect $REGISTRY_DOMAIN:443 </dev/null 2>/dev/null | openssl x509 -outform PEM > /tmp/$REGISTRY_DOMAIN.crt
-
-sudo cp /tmp/$REGISTRY_DOMAIN.crt /etc/docker/certs.d/$REGISTRY_DOMAIN/
-```
 
 Registry configuration:
 https://distribution.github.io/distribution/about/configuration/

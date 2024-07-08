@@ -12,4 +12,4 @@ sleep 3
 VBoxManage snapshot "$VM_NAME" restore "$SNAPSHOT_NAME"
 
 # Start the VM
-VBoxManage startvm "$VM_NAME" # --type headless
+# VBoxManage startvm "$VM_NAME" # --type headless

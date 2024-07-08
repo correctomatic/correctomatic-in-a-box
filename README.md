@@ -1,10 +1,8 @@
 ## TO-DO
 
-registry service:
-  - Create users for the registry service
-  - Bind htpasswd file
-  - Bind mount volume for storing the data
-  - Delete images, why doesn't work
+- Runner containers
+- API container
+- APP container
 
 
 ## Run playbook

@@ -20,6 +20,6 @@
 
 - name: Add users to htpasswd file
   ansible.builtin.command:
-    cmd: htpasswd -b "{{ htpasswd_file }}" "{{ item.username }}" "{{ item.password }}"
+    cmd: htpasswd -bB "{{ htpasswd_file }}" "{{ item.username }}" "{{ item.password }}"
   loop: "{{ docker_registry_users }}"
   no_log: true

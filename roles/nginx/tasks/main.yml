@@ -3,7 +3,7 @@
 - include_tasks: setup_nginx.yml
 
 # Docker registry users are managed by nginx
-- include_tasks: manage_users.yml
+- include_tasks: manage_registry_users.yml
 
 # Certificates are configured in a different way if we
 # are running the playbook in dev mode: it will use certbot for production

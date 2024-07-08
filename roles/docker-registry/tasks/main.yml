@@ -1,4 +1,51 @@
-# Assumes that docker is already installed
 ---
-# - include_tasks: manage_users.yml
-- include_tasks: setup_registry.yml
+- name: Pull the registry image
+  docker_image:
+    name: registry:latest
+    source: pull
+    pull:
+      platform: amd64
+
+- name: Create directory for docker data
+  file:
+    path: "{{ registry.data_directory }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Create directory for registry configuration
+  file:
+    path: /etc/docker/registry/
+    state: directory
+    mode: 0750
+    owner: root
+    group: root
+
+- name: Copy configuration file
+  template:
+    src: config.yml.j2
+    dest: /etc/docker/registry/config.yml
+  notify: Restart Docker registry
+
+- name: Start Docker registry container
+  docker_container:
+    name: docker_registry
+    image: registry:latest
+    ports:
+      - "{{ docker_registry_port }}:5000"
+    restart_policy: always
+    mounts:
+      - type: bind
+        source: "{{ registry.data_directory }}"
+        target: /var/lib/registry
+        read_only: no
+      - type: bind
+        source: /etc/docker/registry/config.yml
+        target: /etc/docker/registry/config.yml
+        read_only: yes
+    # This is for changing the values temporarily
+    # For permanent changes, modify the template
+    # env:
+    #   REGISTRY_LOG_LEVEL: debug
+    #   REGISTRY_LOG_FORMATTER: json # Options are text, json, and logstash

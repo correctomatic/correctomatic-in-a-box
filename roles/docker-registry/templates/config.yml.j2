@@ -14,11 +14,6 @@ http:
     X-Content-Type-Options: [nosniff]
   secret: {{ registry_secret_key }}
 
-auth:
-  htpasswd:
-    realm: Correctomatic registry
-    path: {{ htpasswd_file }}
-
 delete:
   enabled: true
 

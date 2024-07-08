@@ -146,6 +146,56 @@ user2:$apr1$gh4CrWNs$lCepmELnNvJHD24YDxfIv/
 user3:$apr1$.W/QG0N9$oI824dpbk7KscaWWd/iu9.
 
 
+mirror /mirror;
+mirror_request_body off;
+
+location /mirror {
+    # Use internal so that location is not available for direct requests
+    internal;
+    # Use small timeout not to wait for replies (this is not necessary)
+    proxy_read_timeout 1;
+    # Pass headers to logging server
+    proxy_pass http://127.0.0.1:6677;
+    # send original request uri in special header
+    proxy_set_header X-Original-URI $request_uri;
+}
+
+# auth:
+#   htpasswd:
+#     realm: Correctomatic registry
+#     path: {{ htpasswd_file }}
+
+GET /mirror HTTP/1.0
+X-Original-URI: /v2/
+Host: 127.0.0.1:6677
+Connection: close
+User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
+Accept-Encoding: gzip
+
+GET /mirror HTTP/1.0
+X-Original-URI: /v2/
+Host: 127.0.0.1:6677
+Connection: close
+User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
+Authorization: Basic YWx2YXJvOmZvbw==
+Accept-Encoding: gzip
+
+GET /mirror HTTP/1.0
+X-Original-URI: /v2/
+Host: 127.0.0.1:6677
+Connection: close
+User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
+Accept-Encoding: gzip
+
+GET /mirror HTTP/1.0
+X-Original-URI: /v2/
+Host: 127.0.0.1:6677
+Connection: close
+User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
+Authorization: Basic dXNlcjE6cGFzczE=
+Accept-Encoding: gzip
+
+
 
 Registry configuration:
 https://distribution.github.io/distribution/about/configuration/

@@ -1,6 +1,13 @@
 # Assumes that docker is already installed
 ---
 - include_tasks: setup_nginx.yml
+
+# Docker registry users are managed by nginx
+- include_tasks: manage_users.yml
+
+# Certificates are configured in a different way if we
+# are running the playbook in dev mode: it will use certbot for production
+# and a self-signed certificate for development
 - include_tasks: setup_certificates.yml
 - include_tasks: self_signed_certificates.yml
   when: running_environment == "development"

@@ -15,7 +15,8 @@
   ansible.builtin.file:
     path: "{{ htpasswd_file }}"
     state: touch
-    mode: '0600'
+    group: www-data
+    mode: '0640'
 
 - name: Add users to htpasswd file
   ansible.builtin.command:

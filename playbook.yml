@@ -3,7 +3,9 @@
   become: true
   become_method: sudo
   vars_files:
+    # Configuration parameters
     - configuration/config.yml
+    # Secret files
     - secrets/sudo_password.yml
     - secrets/redis_password.yml
     - secrets/registry_users.yml

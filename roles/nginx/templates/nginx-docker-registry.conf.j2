@@ -17,6 +17,10 @@ server {
     # Maximum file upload size
     client_max_body_size 2G;
 
+    # To add basic authentication to v2 use auth_basic setting.
+    auth_basic "Correctomatic registry";
+    auth_basic_user_file {{ htpasswd_file}};
+
     location / {
         proxy_pass http://localhost:{{ docker_registry_port }};
         proxy_set_header Host $host;

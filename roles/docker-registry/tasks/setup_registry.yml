@@ -41,10 +41,10 @@
       - "{{ docker_registry_port }}:5000"
     restart_policy: always
     mounts:
-      - type: bind
-        source: "{{ htpasswd_file}}"
-        target: "{{ htpasswd_file}}"
-        read_only: yes
+      # - type: bind
+      #   source: "{{ htpasswd_file}}"
+      #   target: "{{ htpasswd_file}}"
+      #   read_only: yes
       - type: bind
         source: "{{ registry.data_directory }}"
         target: /var/lib/registry

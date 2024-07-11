@@ -61,7 +61,28 @@ network:
           - 8.8.4.4
 
 
-cat ~/.ssh/id_ansible.pub | ssh ansible@10.0.2.15 'cat >> ~/.ssh/authorized_keys'
+cat ~/.ssh/id_ansible.pub | ssh ansible@correctomatic_vps 'cat >> ~/.ssh/authorized_keys'
+
+You can also use a host only network and a nat network:
+
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses:
+        - 10.10.10.10/24
+      routes:
+        - to: default
+          via: 10.10.10.1
+      nameservers:
+        addresses:
+          - 8.8.8.8
+          - 8.8.4.4
+    enp0s8:
+      dhcp4: no
+      addresses:
+        - 192.168.56.56/24
 
 ## Install ansible
 
@@ -142,57 +163,6 @@ openssl passwd -apr1 -salt N2Kx8OeF pass1
 user1:$apr1$2T2gZjCU$w/yvTwnIlGboHjY45BL3C0
 user2:$apr1$gh4CrWNs$lCepmELnNvJHD24YDxfIv/
 user3:$apr1$.W/QG0N9$oI824dpbk7KscaWWd/iu9.
-
-
-mirror /mirror;
-mirror_request_body off;
-
-location /mirror {
-    # Use internal so that location is not available for direct requests
-    internal;
-    # Use small timeout not to wait for replies (this is not necessary)
-    proxy_read_timeout 1;
-    # Pass headers to logging server
-    proxy_pass http://127.0.0.1:6677;
-    # send original request uri in special header
-    proxy_set_header X-Original-URI $request_uri;
-}
-
-# auth:
-#   htpasswd:
-#     realm: Correctomatic registry
-#     path: {{ htpasswd_file }}
-
-GET /mirror HTTP/1.0
-X-Original-URI: /v2/
-Host: 127.0.0.1:6677
-Connection: close
-User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
-Accept-Encoding: gzip
-
-GET /mirror HTTP/1.0
-X-Original-URI: /v2/
-Host: 127.0.0.1:6677
-Connection: close
-User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
-Authorization: Basic YWx2YXJvOmZvbw==
-Accept-Encoding: gzip
-
-GET /mirror HTTP/1.0
-X-Original-URI: /v2/
-Host: 127.0.0.1:6677
-Connection: close
-User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
-Accept-Encoding: gzip
-
-GET /mirror HTTP/1.0
-X-Original-URI: /v2/
-Host: 127.0.0.1:6677
-Connection: close
-User-Agent: docker/27.0.3 go/go1.21.11 git-commit/662f78c kernel/6.5.0-41-generic os/linux arch/amd64 UpstreamClient(Docker-Client/27.0.3 \(linux\))
-Authorization: Basic dXNlcjE6cGFzczE=
-Accept-Encoding: gzip
-
 
 
 Registry configuration:

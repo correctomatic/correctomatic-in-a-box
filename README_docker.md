@@ -1,54 +1,55 @@
 ## Configure docker to allow remote connetions
 
-### Prepare server remote access
+### Connecting to the VPS docker daemon from the local machine
+
+https://collabnix.com/how-to-connect-to-remote-docker-using-docker-context-cli/
+
+
+https://gist.github.com/kekru/4e6d49b4290a4eebc7b597c07eaf61f2
+
+
+1) Download the certificates. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
+2) Configure the local machine to connect to the remote server
+
+
+
+This is an example of how to download the certificates from the remote machine, but you can copy the certificates using any method you prefer:
+
+```bash
+VPS_USER=ansible
+VPS_HOST=correctomatic_vps
+CERTIFICATES_DIR=~/.config/correctomatic/certs/
+
+mkdir -p "$CERTIFICATES_DIR"
+echo -n "Sudo password:" && read -s vps_password
+
+# Server Certificate authority
+ssh -tt $VPS_USER@$VPS_HOST "echo $vps_password | sudo -S cat /etc/docker/ca/ca-certificate.pem" > "$CERTIFICATES_DIR/ca-certificate.pem"
+
+# Client keys
+ssh -tt $VPS_USER@$VPS_HOST "echo $vps_password | sudo -S cat /etc/docker/certs/correctomatic-client-certificate.pem" > "$CERTIFICATES_DIR/correctomatic-client-certificate.pem"
+ssh -tt $VPS_USER@$VPS_HOST "echo $vps_password | sudo -S cat /etc/docker/certs/correctomatic-private-key.pem" > "$CERTIFICATES_DIR/correctomatic-private-key.pem"
+```
+**Check the certificates**: if you had an error typing the password, the files will have error messages.
+
+
+
+TO-DO
 
 ```sh
-DOCKKER_SERVER=docker.correctomatic.alvaromaceda.es
+VPS_HOST=correctomatic_vps
 
-# Create directories for storing certificates
-sudo mkdir -p /etc/docker/certs
-sudo mkdir -p /etc/docker/ca
 
-# Generate CA private and public keys
-openssl genrsa -aes256 -out /etc/docker/ca/ca-key.pem 4096
-openssl req -new -x509 -days 365 -key /etc/docker/ca/ca-key.pem -sha256 -out /etc/docker/ca/ca.pem
 
-# Generate server private key
-openssl genrsa -out /etc/docker/certs/server-key.pem 4096
-
-# Generate server certificate signing request (CSR)
-openssl req -subj "/CN=$DOCKKER_SERVER" -new -key /etc/docker/certs/server-key.pem -out /etc/docker/certs/server.csr
-
-# Sign server certificate with the CA
-echo "subjectAltName = DNS:$DOCKKER_SERVER" > /etc/docker/certs/extfile.cnf
-openssl x509 -req -days 365 -in /etc/docker/certs/server.csr -CA /etc/docker/ca/ca.pem -CAkey /etc/docker/ca/ca-key.pem -CAcreateserial -out /etc/docker/certs/server-cert.pem -extfile /etc/docker/certs/extfile.cnf
-
-# Generate client private key
-openssl genrsa -out /etc/docker/certs/key.pem 4096
-
-# Generate client certificate signing request (CSR)
-openssl req -subj '/CN=client' -new -key /etc/docker/certs/key.pem -out /etc/docker/certs/client.csr
-
-# Sign client certificate with the CA
-echo extendedKeyUsage = clientAuth > /etc/docker/certs/extfile-client.cnf
-openssl x509 -req -days 365 -in /etc/docker/certs/client.csr -CA /etc/docker/ca/ca.pem -CAkey /etc/docker/ca/ca-key.pem -CAcreateserial -out /etc/docker/certs/cert.pem -extfile /etc/docker/certs/extfile-client.cnf
-
-# Set permissions
-sudo chmod -R 700 /etc/docker/certs
-sudo chmod -R 700 /etc/docker/ca
+export DOCKER_HOST=tcp://$VPS_HOST:2376
+export DOCKER_TLS_VERIFY=1
+export DOCKER_CERT_PATH=<path-to-certificates>
 ```
 
-sudo nano /etc/docker/daemon.json
-```json
-{
-  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
-  "tls": true,
-  "tlscacert": "/etc/docker/ca/ca.pem",
-  "tlscert": "/etc/docker/certs/server-cert.pem",
-  "tlskey": "/etc/docker/certs/server-key.pem",
-  "tlsverify": true
-}
-```
+
+
+
+
 
 ### Prepare client
 

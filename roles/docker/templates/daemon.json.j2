@@ -1,3 +1,8 @@
 {
-  "insecure-registries" : ["{{ registry.domain }}"]
+  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
+  "tls": true,
+  "tlscacert": "{{docker_ca.certificate}}",
+  "tlscert": "{{docker_server.certificate}}",
+  "tlskey": "{{docker_server.private_key}}",
+  "tlsverify": true
 }

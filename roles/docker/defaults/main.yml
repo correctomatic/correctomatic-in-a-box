@@ -1,0 +1,14 @@
+# ---------------------------------------------------------
+# Path of the certificates used to access the docker server
+# ---------------------------------------------------------
+docker_ca:
+  private_key: /etc/docker/ca/ca-private.key
+  certificate: /etc/docker/ca/ca-certificate.pem
+
+docker_server:
+  private_key: /etc/docker/certs/docker-server-private-key.pem
+  certificate: /etc/docker/certs/docker-server-certificate.pem
+
+docker_client:
+  private_key: /etc/docker/certs/correctomatic-private-key.pem
+  certificate: /etc/docker/certs/correctomatic-client-certificate.pem

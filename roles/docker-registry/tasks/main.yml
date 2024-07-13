@@ -33,7 +33,7 @@
     name: docker_registry
     image: registry:latest
     ports:
-      - "{{ docker_registry_port }}:5000"
+      - "{{ registry.internal_port }}:5000"
     restart_policy: always
     mounts:
       - type: bind

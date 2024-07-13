@@ -1,0 +1,30 @@
+---
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+
+# I think this is not neccessary
+# - name: Install Docker Compose
+#   apt:
+#     name: docker-compose
+#     state: present
+
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Create Docker config directory
+  file:
+    path: /etc/docker
+    state: directory
+
+# This is for insecure registries
+# - name: Deploy Docker daemon configuration
+#   template:
+#     src: daemon.json.j2
+#     dest: /etc/docker/daemon.json
+#   notify: Restart Docker

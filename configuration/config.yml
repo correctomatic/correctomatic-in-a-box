@@ -1,24 +1,16 @@
 # Some task can't be executed in a dev environment, ie, certbot
 running_environment: "development"
 
-# TODO: change to this variables
 registry:
   domain: "registry.correctomatic.alvaromaceda.es"
   data_directory: "/var/registry"
   internal_port: 5000
 
-
-# This is the internal port for the registry, it's accessible in port 443 at registry domain
-registry.domain: "registry.correctomatic.alvaromaceda.es"
-docker_registry_port: 5000  # Default port for Docker registry
-
-
+docker:
+  domain: "docker.correctomatic.alvaromaceda.es"
 
 correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"
-
-
-
 
 # DEBUG, should be protected in production
 correctomatic_api_domain: "api.correctomatic.alvaromaceda.es"

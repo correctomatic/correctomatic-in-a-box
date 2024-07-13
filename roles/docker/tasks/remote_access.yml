@@ -7,27 +7,17 @@
     - /etc/docker/certs
     - /etc/docker/ca
 
-
-# https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html
-
 # -------------------------------
 # Certificate authority
 # -------------------------------
-
-- name: Check if CA certificate exists
-  stat:
-    path: /path/to/your/file
-  register: file_check
-
 - name: Create CA private key
   openssl_privatekey:
     path: /etc/docker/ca/ca-private.key
-    # passphrase: "{{ secret_ca_passphrase }}"
 
-- name: Create certificate signing request (CSR) for CA certificate
-  community.crypto.openssl_csr_pipe:
+- name: Create CSR for CA certificate
+  community.crypto.openssl_csr:
+    path: /etc/docker/ca/ca.csr
     privatekey_path: /etc/docker/ca/ca-private.key
-    # privatekey_passphrase: "{{ secret_ca_passphrase }}"
     common_name: Docker CA
     use_common_name_for_san: false  # since we do not specify SANs, don't use CN as a SAN
     basic_constraints:
@@ -36,121 +26,70 @@
     key_usage:
       - keyCertSign
     key_usage_critical: true
-  register: ca_csr
-
-# Delete csr?
 
 - name: Create self-signed CA certificate from CSR
   community.crypto.x509_certificate:
     path: /etc/docker/ca/ca-certificate.pem
-    csr_content: "{{ ca_csr.csr }}"
+    csr_path: /etc/docker/ca/ca.csr
     privatekey_path: /etc/docker/ca/ca-private.key
-    # privatekey_passphrase: "{{ secret_ca_passphrase }}"
     provider: selfsigned
-
-
-# - name: Generate CA private key
-#   openssl_privatekey:
-#     path: /etc/docker/ca/ca-private-key.pem
-#     size: 4096
-#     # passphrase: "your_passphrase_here"
-#   register: ca_privatekey
-
-# - name: Generate CA public key
-#   openssl_certificate:
-#     common_name: "Docker CA"
-#     path: /etc/docker/ca/ca-public-key.pem
-#     privatekey_path: /etc/docker/ca/ca-private-key.pem
-#     # privatekey_passphrase: "your_passphrase_here"
-#     provider: selfsigned
-#     days: 365
 
 # -------------------------------
 # Server
 # -------------------------------
-
-
-
 - name: Generate server private key
   openssl_privatekey:
     path: /etc/docker/certs/server-private-key.pem
     size: 4096
     state: present
-  # register: server_privatekey
 
 - name: Generate server certificate signing request (CSR)
   openssl_csr:
-    common_name: "{{ docker.domain }}"
-    path: /etc/docker/certs/server.csr
+    path: /etc/docker/certs/docker-server.csr
     privatekey_path: /etc/docker/certs/server-private-key.pem
-    backup: true
-    # creates: /etc/docker/certs/server-cert.pem
-
-# Possible improvement
-# - name: Create certificate signing request (CSR) for self-signed certificate
-#   community.crypto.openssl_csr_pipe:
-#     privatekey_path: /path/to/certificate.key
-#     common_name: ansible.com
-#     organization_name: Ansible, Inc.
-#     subject_alt_name:
-#       - "DNS:ansible.com"
-#       - "DNS:www.ansible.com"
-#       - "DNS:docs.ansible.com"
-#   register: csr
+    common_name: "{{ docker.domain }}"
+    subject_alt_name:
+      - "DNS:{{ docker.domain }}"
+    key_usage:
+      - digitalSignature
+    key_usage_critical: true
+    extended_key_usage:
+      - serverAuth
+      - clientAuth
+    extended_key_usage_critical: yes
 
 - name: Sign server certificate with the CA
   openssl_certificate:
-    path: /etc/docker/certs/server-cert.pem
-    csr_path: /etc/docker/certs/server.csr
-    privatekey_path: /etc/docker/ca/ca-private-key.pem
-    # privatekey_passphrase: "your_passphrase_here"
-    ca_path: /etc/docker/ca/ca-public-key.pem
-    provider: selfsigned
-    extended_key_usage: clientAuth,serverAuth
-    subject_alt_name:
-      - "DNS:{{ docker.domain }}"
-    days: 365
-
-# Delete server csr?
+    path: /etc/docker/certs/docker-server-certificate.pem
+    csr_path: /etc/docker/certs/docker-server.csr
+    ownca_privatekey_path: /etc/docker/ca/ca-private.key
+    ownca_path: /etc/docker/ca/ca-certificate.pem
+    provider: ownca
 
 # -------------------------------
 # Client
 # -------------------------------
 - name: Generate client private key
   openssl_privatekey:
-    path: /etc/docker/certs/key.pem
+    path: /etc/docker/certs/correctomatic-private-key.pem
     size: 4096
-  register: client_privatekey
 
 - name: Generate client certificate signing request (CSR)
   openssl_csr:
-    common_name: "client"
-    path: /etc/docker/certs/client.csr
-    privatekey_path: /etc/docker/certs/key.pem
+    path: /etc/docker/certs/correctomatic-client.csr
+    privatekey_path: /etc/docker/certs/correctomatic-private-key.pem
+    common_name: "Correctomatic client"
+    key_usage:
+      - digitalSignature
+    key_usage_critical: true
+    extended_key_usage:
+      - clientAuth
 
 - name: Sign client certificate with the CA
   openssl_certificate:
-    path: /etc/docker/certs/cert.pem
-    csr_path: /etc/docker/certs/client.csr
-    privatekey_path: /etc/docker/ca/ca-private-key.pem
-    # privatekey_passphrase: "your_passphrase_here"
-    ca_path: /etc/docker/ca/ca-public-key.pem
-    provider: selfsigned
-    extended_key_usage: clientAuth
-    days: 365
-
-# Delete client csr?
-
-# -------------------------------
-# Permissions
-# -------------------------------
-- name: Set permissions for certificates and CA directories
-  file:
-    path: "{{ item }}"
-    # mode: '0700'
-    # BIG DEBUG
-    mode: '755'
-    recurse: yes
-  loop:
-    - /etc/docker/certs
-    - /etc/docker/ca
+    path: /etc/docker/certs/correctomatic-client-certificate.pem
+    csr_path: /etc/docker/certs/correctomatic-client.csr
+    privatekey_path: /etc/docker/ca/ca-private.key
+    ownca_privatekey_path: /etc/docker/ca/ca-private.key
+    ownca_path: /etc/docker/ca/ca-certificate.pem
+    provider: ownca

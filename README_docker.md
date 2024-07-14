@@ -5,8 +5,8 @@
 If you want to connect to the Docker server in the VPS from your local machine, you need to download the certificates from the VPS and configure the Docker client to use them. Note that **this will only work if the playbook has been run in development mode**. If not, the docker server is not accessible from the outside.
 
 1) Download the certificates. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
-2) Test the connection
-3) Optional: create a Docker context for future connections
+2) Test the connection.
+3) Optional: create a Docker context for future connections. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
 
 #### Download the certificates
 
@@ -44,10 +44,7 @@ unset DOCKER_TLS_VERIFY
 #### Create a Docker context
 
 You can create a docker context to avoid setting the environment variables each time you want to connect to the VPS. There is
-a script that does this for you: `utils\docker_create_context.sh`. Once the context is created, you won't need to create
-it again even if the certificates are regenerated (but remember to download the new certificates).
-
-```sh
+a script that does this for you: `utils\docker_create_context.sh`. **You will need to recreate the context each time the certificates are regenerated**.
 
 Once the context is created, you can activate it and run docker commands as usual, but they will be executed in the VPS:
 
@@ -62,34 +59,40 @@ docker image pull alpine:latext
 To switch back to the local context run `docker context use default`.
 
 
---------------------------------------------------------
-DOCKERODE
---------------------------------------------------------
+#### Test the connection using Dockerode
 
-### Prepare client
+The Correctomatic uses Dockerode to interact with the Docker daemon. Here you have
+an example to test the connection using Dockerode (you will need to add the `dockerode`
+dependency to your project):
 
-#### Copy Certificates
-Copy the client certificates and CA certificate from the remote machine to the local machine. For example, you can use scp:
-
-```sh
-scp user@docker.example.com:/etc/docker/ca/ca.pem /path/to/local/ca.pem
-scp user@docker.example.com:/etc/docker/certs/cert.pem /path/to/local/cert.pem
-scp user@docker.example.com:/etc/docker/certs/key.pem /path/to/local/key.pem
-```
-
-#### Configure Dockerode
-Set up dockerode to use the TLS certificates and the domain name. Create a JavaScript file (e.g., docker.js) and use the following code:
 
 ```js
-const Docker = require('dockerode');
-const fs = require('fs');
+import fs from 'fs';
+import path from 'path';
+import os from 'os'; // Importing os module for accessing home directory
+
+import Docker from 'dockerode';
+
+// Get the user's home directory
+const homeDir = os.homedir();
+const certDir = path.join(homeDir, '.correctomatic', 'certs');
+
+// Define paths to your certificate files relative to the home directory
+const caPath = path.join(certDir, 'ca.pem');
+const certPath = path.join(certDir, 'cert.pem');
+const keyPath = path.join(certDir, 'key.pem');
+
+// Read certificate files synchronously
+const ca = fs.readFileSync(caPath);
+const cert = fs.readFileSync(certPath);
+const key = fs.readFileSync(keyPath);
 
 const docker = new Docker({
-  host: 'docker.example.com',
+  host: 'docker.correctomatic.alvaromaceda.es',
   port: 2376,
-  ca: fs.readFileSync('/path/to/local/ca.pem'),
-  cert: fs.readFileSync('/path/to/local/cert.pem'),
-  key: fs.readFileSync('/path/to/local/key.pem')
+  ca,
+  cert,
+  key
 });
 
 // Example: List containers
@@ -100,3 +103,4 @@ docker.listContainers({ all: true }, function (err, containers) {
   console.log('Containers:', containers);
 });
 ```
+

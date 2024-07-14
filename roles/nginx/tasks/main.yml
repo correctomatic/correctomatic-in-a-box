@@ -10,4 +10,4 @@
 # and a self-signed certificate for development
 - include_tasks: setup_certificates.yml
 - include_tasks: self_signed_certificates.yml
-  when: running_environment == "development"
+  when: development_mode

@@ -43,7 +43,11 @@ unset DOCKER_TLS_VERIFY
 
 #### Create a Docker context
 
-You can create a docker context to avoid setting the environment variables each time you want to connect to the VPS. You have a script that does this for you: `utils\docker_create_context.sh`.
+You can create a docker context to avoid setting the environment variables each time you want to connect to the VPS. There is
+a script that does this for you: `utils\docker_create_context.sh`. Once the context is created, you won't need to create
+it again even if the certificates are regenerated (but remember to download the new certificates).
+
+```sh
 
 Once the context is created, you can activate it and run docker commands as usual, but they will be executed in the VPS:
 

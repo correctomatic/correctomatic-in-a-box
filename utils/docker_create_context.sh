@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Variables
+# You MUST use the domain defined in the configuration file: docker.domain
+# The certificates are generated for that specific domain
 REMOTE_DOCKER_HOST=docker.correctomatic.alvaromaceda.es
 CONTEXT_NAME=correctomatic_vps
 CERTIFICATES_DIR="${HOME}/.correctomatic/certs"

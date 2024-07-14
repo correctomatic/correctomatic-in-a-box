@@ -14,7 +14,7 @@
   pre_tasks:
     - name: Print the environment configuration
       debug:
-        msg: "Launching in mode: {{ running_environment }}"
+        msg: "Launching in mode: {{ 'development' if development_mode else 'production'}}"
     - name: Print the value of registry domain
       debug:
         msg: "The value of registry domain is {{ registry.domain }}"
@@ -28,13 +28,13 @@
           - vim
         state: present
         update_cache: yes
-      when: running_environment == "development"
+      when: development_mode
     - name: Add ansible user to docker group
       user:
         name=ansible
         groups=docker
         append=yes
-      when: running_environment == "development"
+      when: development_mode
 
   roles:
     - docker

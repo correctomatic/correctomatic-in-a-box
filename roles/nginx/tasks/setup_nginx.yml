@@ -24,4 +24,4 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   notify: Reload Nginx
-  when: running_environment != "development"
+  when: not development_mode

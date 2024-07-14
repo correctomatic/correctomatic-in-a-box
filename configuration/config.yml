@@ -1,5 +1,6 @@
-# Some task can't be executed in a dev environment, ie, certbot
-running_environment: "development"
+# Some task can't be executed in a dev environment, ie, certbot, and we will need
+# some additional tasks (open ports, etc.)
+development_mode: yes
 
 registry:
   domain: "registry.correctomatic.alvaromaceda.es"

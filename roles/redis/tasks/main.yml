@@ -2,7 +2,7 @@
 - name: Bind to all addresses if launched in development mode
   set_fact:
     redis_bind_address: "0.0.0.0 ::1"
-  when: running_environment == "development"
+  when: development_mode
 
 - name: Install Redis
   apt:

@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 # You MUST use the domain defined in the configuration file: docker.domain
 # The certificates are generated for that specific domain

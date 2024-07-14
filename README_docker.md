@@ -58,7 +58,6 @@ docker image pull alpine:latext
 
 To switch back to the local context run `docker context use default`.
 
-
 #### Test the connection using Dockerode
 
 The Correctomatic uses Dockerode to interact with the Docker daemon. Here you have

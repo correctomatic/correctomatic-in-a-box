@@ -23,18 +23,3 @@
   notify:
     - Restart Docker
 
-# /usr/lib/systemd/system/docker.service
-# They don't seem to consider this a bug. But it is definitely an annoyance. A workaround is to copy the default unit file and remove the -H fd:// from it:
-
-# $ sudo cp /lib/systemd/system/docker.service /etc/systemd/system/
-# $ sudo sed -i 's/\ -H\ fd:\/\///g' /etc/systemd/system/docker.service
-# $ sudo systemctl daemon-reload
-# $ sudo systemctl restart docker
-
-# For systemd, my preferred method is to deploy a simple override file (you may need to first create the directory):
-
-# $ cat /etc/systemd/system/docker.service.d/override.conf
-# # Disable flags to dockerd, all settings are done in /etc/docker/daemon.json
-# [Service]
-# ExecStart=
-# ExecStart=/usr/bin/dockerd

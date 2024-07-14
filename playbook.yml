@@ -19,6 +19,7 @@
       debug:
         msg: "The value of registry domain is {{ registry.domain }}"
 
+  # Additional tasks when running in development mode
   tasks:
     - name: Install utility packages
       apt:
@@ -27,6 +28,13 @@
           - vim
         state: present
         update_cache: yes
+      when: running_environment == "development"
+    - name: Add ansible user to docker group
+      user:
+        name=ansible
+        groups=docker
+        append=yes
+      when: running_environment == "development"
 
   roles:
     - docker

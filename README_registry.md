@@ -37,7 +37,12 @@ https://github.com/Joxit/docker-registry-ui
 To be able to use the images in the VPS, you need to pull them from the registry. You can use the following commands:
 
 ```sh
-docker pull registry.correctomatic.alvaromaceda.es/<image>:<tag>
+docker pull $DOCKER_REGISTRY/$IMAGE
+```
+
+And then tag them to remove the registry in the name:
+```sh
+docker tag $DOCKER_REGISTRY/$IMAGE $IMAGE
 ```
 
 ## Registry frontend

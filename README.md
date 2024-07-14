@@ -1,5 +1,6 @@
 ## TO-DO
 
+- Configure the VPS to access its own registry
 - Runner containers
 - API container
 - APP container

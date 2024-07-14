@@ -2,6 +2,7 @@
 
 VM_NAME="correctomatic_vps"
 SNAPSHOT_NAME="clean_state"
+# SNAPSHOT_NAME="basic_installation"
 
 # Stop the VM if it's running
 VBoxManage controlvm "$VM_NAME" poweroff

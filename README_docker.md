@@ -7,32 +7,23 @@ https://collabnix.com/how-to-connect-to-remote-docker-using-docker-context-cli/
 
 https://gist.github.com/kekru/4e6d49b4290a4eebc7b597c07eaf61f2
 
+If you want to connect to the Docker server in the VPS from your local machine, you need to download the certificates from the VPS and configure the Docker client to use them. Note that **this will only work if the playbook has been run in development mode**. If not, the docker server is not accessible from the outside.
 
 1) Download the certificates. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
-2) Configure the local machine to connect to the remote server
+2) Test the connection
+3) Create a Docker context for future connections
+
+#### Download the certificates
+
+The certificates are stored in the VPS in the following paths:
+- CA certificate: `/etc/docker/ca/ca-certificate.pem`
+- Client certificate: `/etc/docker/certs/correctomatic-client-certificate.pem`
+- Client private key: `/etc/docker/certs/correctomatic-private-key.pem`
+
+They should be copied to the local machine in a directory. For example, you can use `~/.correctomatic/certs/`, and the names are, by convention, `ca.pem`, `cert.pem`, and `key.pem`. There is an script that does this for you in the `utils` directory.
 
 
-
-This is an example of how to download the certificates from the remote machine, but you can copy the certificates using any method you prefer:
-
-```bash
-VPS_USER=ansible
-VPS_HOST=correctomatic_vps
-CERTIFICATES_DIR=~/.config/correctomatic/certs/
-
-mkdir -p "$CERTIFICATES_DIR"
-echo -n "Sudo password:" && read -s vps_password
-
-# Server Certificate authority
-ssh -tt $VPS_USER@$VPS_HOST "echo $vps_password | sudo -S cat /etc/docker/ca/ca-certificate.pem" > "$CERTIFICATES_DIR/ca-certificate.pem"
-
-# Client keys
-ssh -tt $VPS_USER@$VPS_HOST "echo $vps_password | sudo -S cat /etc/docker/certs/correctomatic-client-certificate.pem" > "$CERTIFICATES_DIR/correctomatic-client-certificate.pem"
-ssh -tt $VPS_USER@$VPS_HOST "echo $vps_password | sudo -S cat /etc/docker/certs/correctomatic-private-key.pem" > "$CERTIFICATES_DIR/correctomatic-private-key.pem"
-```
-**Check the certificates**: if you had an error typing the password, the files will have error messages.
-
-
+#### Test connection from local machine:
 
 TO-DO
 
@@ -40,16 +31,16 @@ TO-DO
 VPS_HOST=correctomatic_vps
 
 
-
 export DOCKER_HOST=tcp://$VPS_HOST:2376
+export DOCKER_CERT_PATH=~/.config/correctomatic/certs
 export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=<path-to-certificates>
 ```
 
 
 
-
-
+--------------------------------------------------------
+DOCKERODE
+--------------------------------------------------------
 
 ### Prepare client
 

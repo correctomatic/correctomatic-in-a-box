@@ -33,4 +33,7 @@ sshpass -p "$VPS_PASSWORD" ssh $VPS_USER@$VPS_HOST 'bash -s' <<< "$SCRIPT"
 # Donwload the files to the local machine
 sshpass -p "$VPS_PASSWORD" scp -r $VPS_USER@$VPS_HOST:/tmp/certificates_download/* $CERTIFICATES_DIR
 
-echo "Certificates downloaded to $CERTIFICATES_DIR"
+# Remove the files from the remote server
+sshpass -p "$VPS_PASSWORD" ssh $VPS_USER@$VPS_HOST 'rm -Rf /tmp/certificates_download'
+
+echo -e "\n\nCertificates downloaded to $CERTIFICATES_DIR"

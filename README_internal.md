@@ -136,14 +136,6 @@ certbot --text --agree-tos --email you@example.com -d bristol3.pki.enigmabridge.
 - Install certbot, slow
 
 
-## Test registry
-
-Test that registry works:
-```bash
-REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
-curl --insecure -X GET https://$REGISTRY_DOMAIN/v2/_catalog
-```
-
 ### Registry notes
 
 openssl passwd -apr1 -salt N2Kx8OeF pass1

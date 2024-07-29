@@ -10,7 +10,6 @@ The purpose of this repository is to provide a simple way to install the Correct
 
 If you want to install the Correctomatic in multiple servers, you could probably reuse the roles defined in this playbook
 
-
 ## Configuration
 
 TO-DO
@@ -18,16 +17,16 @@ Modify configuration/config.yml. Explain entries.
 Modify hosts file
 
 ## Running the playbook
+[Install ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), you will need it to run the playbook. Usually done with `pipx install --include-deps ansible`.
 
-TO-DO
+Run the playbook:
 ```sh
 ansible-playbook playbook.yml
 ```
 
+## Working with the private registry
 
-## Configure the private registry
-
-TO-DO: access the registry from your machine
+The correctomatic works with a private registry (usually, the correction images are kept private) There is another file with [documentation on the private registry](README_registry.md)
 
 ## Development
 
@@ -37,7 +36,6 @@ TO-DO
 
 TO-DO: /etc/hosts entries
 
-[Install ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), you will need it to run the playbook. Usually done with `pipx install --include-deps ansible`.
 
 
 You will need to create some entries in /etc/hosts to reply the DNS entries that the correctomatic would have in a real deployment:
@@ -45,6 +43,8 @@ You will need to create some entries in /etc/hosts to reply the DNS entries that
 ```
 192.168.56.56  correctomatic_vps
 192.168.56.56  <your registry domain, ie, registry.my.correctomatic.com>
+# For connecting to the VPS docker's server:
+192.168.56.56  <your docker domain, ie, docker.my.correctomatic.com>
 
 ```
 ### Prepare the virtual host
@@ -112,7 +112,7 @@ The certificates are stored in the VPS in the following paths:
 - Client certificate: `/etc/docker/certs/correctomatic-client-certificate.pem`
 - Client private key: `/etc/docker/certs/correctomatic-private-key.pem`
 
-They should be copied to the local machine in a directory. For example, you can use `~/.correctomatic/certs/`, and the names are, by convention, `ca.pem`, `cert.pem`, and `key.pem`. There is an script that does this for you:`utils\docker_download_certs.sh`).
+They should be copied to the local machine in a directory. For example, you can use `~/.correctomatic/certs/`, and the names are, by convention, `ca.pem`, `cert.pem`, and `key.pem`. There is an script that does this for you:`utils\docker_download_certs.sh`), you will need to have `sshpass` installed before running it.
 
 
 #### Test connection from local machine:

@@ -4,7 +4,17 @@ The VPS has a private Docker registry running. This registry is used to store Do
 
 This document explains how to work with the registry.
 
-## Prepare your local machine to work with the registry
+## Test registry
+
+Test that registry works:
+```bash
+REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+curl -u <username>:<password> --insecure -X GET https://$REGISTRY_DOMAIN/v2/_catalog
+```
+
+It must return a JSON like `{"repositories":[]}`
+
+## Prepare your local machine to work with the registry in development
 
 Docker needs to trust the self-signed certificate used by the virtual machine. You won't need this in production because you will have a real certificate. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
 
@@ -27,11 +37,6 @@ docker image tag $IMAGE $DOCKER_REGISTRY/$IMAGE
 docker image push $DOCKER_REGISTRY/$IMAGE
 ```
 
-
-TO-DO: check this frontend
-https://github.com/Joxit/docker-registry-ui
-
-
 ## Pull images in the VPS
 
 To be able to use the images in the VPS, you need to pull them from the registry. You can use the following commands:
@@ -47,7 +52,7 @@ docker tag $DOCKER_REGISTRY/$IMAGE $IMAGE
 
 ## Registry frontend
 
-The easiest way to interact with the registry is using a frontend. You can use the docker-compose.yml files in the `utils/registry_frontend` directory to run a frontend in the VPS.
+The easiest way to interact with the registry is using a frontend. You can use the `docker-compose.yml` files in the `utils/registry_frontend` directory to run a frontend in the VPS.
 
 ## List images in the registry
 

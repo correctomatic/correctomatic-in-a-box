@@ -10,13 +10,19 @@ The purpose of this repository is to provide a simple way to install the Correct
 
 If you want to install the Correctomatic in multiple servers, you could probably reuse the roles defined in this playbook
 
-## Running the playbook
-
-TO-DO
 
 ### Configuration
 
 TO-DO
+Modify configuration/config.yml. Explain entries.
+Modify hosts file
+
+## Running the playbook
+
+TO-DO
+```sh
+ansible-playbook playbook.yml
+```
 
 ## Development
 
@@ -26,6 +32,16 @@ TO-DO
 
 TO-DO: /etc/hosts entries
 
+[Install ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), you will need it to run the playbook. Usually done with `pipx install --include-deps ansible`.
+
+
+You will need to create some entries in /etc/hosts to reply the DNS entries that the correctomatic would have in a real deployment:
+
+```
+192.168.56.56  correctomatic_vps
+192.168.56.56  <your registry domain, ie, registry.my.correctomatic.com>
+
+```
 ### Prepare the virtual host
 
 1) Install an Ubuntu 22.04 server. The playbook expects a user `ansible` with password ansible (you can change the password modifying `secrets/sudo_password.yml`)
@@ -65,14 +81,19 @@ network:
 Alternatively, you can use a bridged network. In that case, you will need to assign a fixed IP to the virtual machine, either by configuring the DHCP of the network or by modifying the netplan.
 
 3) Generate a ssh key
-```
+```sh
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_ansible -C "ansible@correctomatic_vps"
 ```
 
 4) Copy the key to the VPS
 ```sh
-ssh-copy-id -i id_ansible ansible@correctomatic_vps
+ssh-copy-id -i  ~/.ssh/id_ansible ansible@correctomatic_vps
 ```
 
 At this point, create a snapshot and name it `clean_state`. You can restore this snapshot later to retry the ansible playbook with a clean machine. There is a script, `restore_snapshot.sh`, for restoring that snapshot automatically.
+
+### Download keys
+
+TO-DO: steps for downloading the keys once the playbook has run
+
 

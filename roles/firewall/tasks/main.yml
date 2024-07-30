@@ -1,0 +1,23 @@
+---
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+
+
+- name: Set default UFW policies
+  ufw:
+    default: deny
+    direction: incoming
+  become: true
+  notify: reload ufw
+
+- include_tasks: production.yml
+
+- include_tasks: development.yml
+  when: development_mode
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+  notify: reload ufw

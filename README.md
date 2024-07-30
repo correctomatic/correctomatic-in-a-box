@@ -16,6 +16,10 @@ TO-DO
 Modify configuration/config.yml. Explain entries.
 Modify hosts file
 
+### Secrets
+
+TO-DO
+
 ## Running the playbook
 [Install ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), you will need it to run the playbook. Usually done with `pipx install --include-deps ansible`.
 

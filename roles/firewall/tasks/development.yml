@@ -1,0 +1,11 @@
+---
+- name: Allow ports for development environment
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    comment: "{{ item.comment }}"
+  loop:
+    - { port: 2376, proto: "tcp", comment: "Docker server" }
+    - { port: 6380, proto: "tcp", comment: "Redis server" }
+  notify: reload ufw

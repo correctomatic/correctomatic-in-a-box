@@ -11,8 +11,8 @@ CLIENT_CERT_PATH=$CERTIFICATES_DIR/cert.pem
 CLIENT_KEY_PATH=$CERTIFICATES_DIR/key.pem
 
 if docker context ls --format '{{.Name}}' | grep -q "^${CONTEXT_NAME}$"; then
-    echo "Docker context '${CONTEXT_NAME}' already exists."
-    exit 1
+    echo "Docker context '${CONTEXT_NAME}' already exists. Removing it."
+    docker context rm "${CONTEXT_NAME}"
 fi
 
 # Create Docker Context

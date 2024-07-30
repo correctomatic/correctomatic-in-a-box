@@ -1,0 +1,11 @@
+---
+- name: Allow ports for production environment
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    comment: "{{ item.comment }}"
+  loop:
+    - { port: "{{ ssh_port }}", proto: "tcp", comment: "SSH access" }
+    - { port: 443, proto: "tcp", comment: "https for Docker registry and Correctomatic app" }
+  notify: reload ufw

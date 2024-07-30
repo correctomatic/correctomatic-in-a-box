@@ -2,6 +2,9 @@
 # some additional tasks (open ports, etc.)
 development_mode: yes
 
+# Change if you have a non-standard ssh port
+ssh_port: 22
+
 registry:
   domain: "registry.correctomatic.alvaromaceda.es"
   data_directory: "/var/registry"

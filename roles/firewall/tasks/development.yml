@@ -7,5 +7,5 @@
     comment: "{{ item.comment }}"
   loop:
     - { port: 2376, proto: "tcp", comment: "Docker server" }
-    - { port: 6380, proto: "tcp", comment: "Redis server" }
+    - { port: 6379, proto: "tcp", comment: "Redis server" }
   notify: reload ufw

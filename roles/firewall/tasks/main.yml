@@ -4,6 +4,9 @@
     name: ufw
     state: present
 
+- name: Reset firewall entries
+  ufw:
+    state: reset
 
 - name: Set default UFW policies
   ufw:

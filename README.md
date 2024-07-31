@@ -12,9 +12,15 @@ If you want to install the Correctomatic in multiple servers, you could probably
 
 ## Configuration
 
-TO-DO
-Modify configuration/config.yml. Explain entries.
-Modify hosts file
+The playbook **must** be configured modifying the `configuration/config.yml` file. The most important entries are:
+
+- `development_mode`: should be `no` for production. If you want to run the playbook in development mode, follow the instructions in the corresponding section.
+- `registry`: update the domain to the one you will use for the correctomatic's internal registry.
+- `docker`: update the domain to a valid value in your domain, it will point to localhost in production, but you will probably use it for debugging.
+- `lets_encrypt_email`: TO-DO
+
+These values are used only for development, you can leave them if you are running the playbook in production:
+- `correctomatic_api_domain`: used only in development mode, the API **must** be protected in production.
 
 ### Secrets
 
@@ -34,15 +40,11 @@ The correctomatic works with a private registry (usually, the correction images 
 
 ## Development
 
-TO-DO
+If you want to run the playbook in development mode (for testing changes, for example) follow the instructions in this section.
 
 ### Prepare your host
 
-TO-DO: /etc/hosts entries
-
-
-
-You will need to create some entries in /etc/hosts to reply the DNS entries that the correctomatic would have in a real deployment:
+You will need to create some entries in `/etc/hosts` to reply the DNS entries that the correctomatic would have in a real deployment:
 
 ```
 192.168.56.56  correctomatic_vps
@@ -53,15 +55,15 @@ You will need to create some entries in /etc/hosts to reply the DNS entries that
 ```
 ### Prepare the virtual host
 
-1) Install an Ubuntu 22.04 server. The playbook expects a user `ansible` with password ansible (you can change the password modifying `secrets/sudo_password.yml`)
+1) Install an Ubuntu 22.04 server. The playbook expects a user `ansible` with password `ansible` (you can change the password modifying `secrets/sudo_password.yml`)
 
-2) Configure the network. You will need to have two networks:
+2) Configure the network. You will need two networks in the virtual machine:
    - One NAT network, so the VPS can connect to the internet
-   - One host only network so you can use the VPS from your host
+   - One host only network so you can access the VPS from your host
 
    Folow this steps:
    1) Create a NAT network using the VirtualBox network manager. Assign the `10.10.10.0/24` address to the network, the virtual machine will have the address `10.10.10.10`.
-   2) Create a host only network using the VirtualBox network manager. The address will be 192.168.56.1/24. You don't need to have the DHCP enabled.
+   2) Create a host only network using the VirtualBox network manager. The address will be `192.168.56.1/24`. You don't need to have DHCP enabled.
    3) Configure the interfaces in the virtual machine.
       1) Add two network interfaces: the first will be connected to the NAT network, and the second to the host only network.
       2) Create the file `/etc/netplan/01-netcfg.yaml` with this content (adapt the nameservers to your network settings):
@@ -87,14 +89,14 @@ network:
         - 192.168.56.56/24
 ```
 
-Alternatively, you can use a bridged network. In that case, you will need to assign a fixed IP to the virtual machine, either by configuring the DHCP of the network or by modifying the netplan.
+Alternatively, you can use a bridged network. In that case, you will need to assign a fixed IP to the virtual machine, either by configuring the DHCP of your network or by modifying the netplan.
 
-3) Generate a ssh key
+3) Generate a ssh key. This will generate a `id_ansible` key pair in `~/.ssh`:
 ```sh
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_ansible -C "ansible@correctomatic_vps"
 ```
 
-4) Copy the key to the VPS
+4) Copy the key to the VPS:
 ```sh
 ssh-copy-id -i  ~/.ssh/id_ansible ansible@correctomatic_vps
 ```
@@ -103,11 +105,11 @@ At this point, create a snapshot and name it `clean_state`. You can restore this
 
 ### Connecting to the VPS docker daemon from the local machine
 
-If you want to connect to the Docker server in the VPS from your local machine, you need to download the certificates from the VPS and configure the Docker client to use them. Note that **this will only work if the playbook has been run in development mode**. If not, the docker server is not accessible from the outside.
+If you want to connect to the Docker server in the VPS from your local machine, you need to download the certificates from the VPS and configure the Docker client to use them. Note that **this will only work if the playbook has run in development mode**. If not, the docker server is not accessible from the outside.
 
-1) Download the certificates. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
+1) Download the certificates. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**.
 2) Test the connection.
-3) Optional: create a Docker context for future connections. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
+3) Optional: create a Docker context for future connections. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**.
 
 #### Download the certificates
 
@@ -145,7 +147,7 @@ unset DOCKER_TLS_VERIFY
 #### Create a Docker context
 
 You can create a docker context to avoid setting the environment variables each time you want to connect to the VPS. There is
-a script that does this for you: `utils\docker_create_context.sh`. **You will need to recreate the context each time the certificates are regenerated**.
+a script that does this for you: `utils\docker_create_context.sh`. Update the script first to use the correct domain name. **You will need to recreate the context each time the certificates are regenerated**.
 
 Once the context is created, you can activate it and run docker commands as usual, but they will be executed in the VPS:
 
@@ -203,3 +205,49 @@ docker.listContainers({ all: true }, function (err, containers) {
   console.log('Containers:', containers);
 });
 ```
+
+### Test the redis server
+
+TO-DO: not tested
+
+The VPS's Redis server can be accessed using `redis-cli`, use the same password defined in `secrets/redis_password.yml`. Take in account that the redis server won't be accesible in production mode, the firewall ports are closed and redis is listening only at localhost:
+
+```sh
+redis-cli -h 192.168.56.56 -p 6379 -a 'your_password'
+
+192.168.56.56:6379> ping
+PONG
+```
+
+You can also use RedisInsight web frontend to debug the server:
+
+```sh
+# This is for keeping configuration, run
+# docker volume rm redisinsight when done
+docker volume create redisinsight
+
+docker run \
+  --rm \
+  --network host \
+  --name VPS-redisinsight \
+  -v redisinsight:/data \
+  redis/redisinsight
+```
+The server can be accessed at [http://localhost:5540](http://localhost:5540).
+
+The container will have an address in host's network. For configuring RedisInsight, Redis server will be accesible at the VPS host only IP (192.168.56.56) port 6379.
+
+If you want to debug BullMQ, run a web dashboard with:
+
+```sh
+docker run \
+  --rm \
+  --network host \
+  --name VPS-bullmq \
+  igrek8/bullmq-dashboard \
+  --redis-host 192.168.56.56 \
+  --bullmq-prefix bull \
+  --host 192.168.56.1 \
+  --redis-password <redis password here>"
+```
+The server can be accessed at [http://localhost:3000](http://localhost:3000).

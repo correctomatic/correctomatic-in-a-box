@@ -14,7 +14,7 @@ http:
   host: {{ registry.domain }}
   headers:
     X-Content-Type-Options: [nosniff]
-  secret: {{ registry_secret_key }}
+  secret: {{ registry_password }}
 
 health:
   storagedriver:

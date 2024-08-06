@@ -13,6 +13,11 @@ registry:
 docker:
   domain: "docker.correctomatic.alvaromaceda.es"
 
+runner:
+  shared_folder: /exercises/shared
+  # minutes
+  delete_exercises_older_than: 60
+
 # correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"
 

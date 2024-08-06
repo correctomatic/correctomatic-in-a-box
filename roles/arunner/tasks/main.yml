@@ -1,13 +1,19 @@
 ---
 - name: Create shared volume directory
   file:
-    path: /srv/shared
+    path: "{{ registry.shared_folder }}"
     state: directory
 
-- name: Create PostgreSQL data directory
-  file:
-    path: /srv/postgresql
-    state: directory
+- name: Crontab for deleting old exercises
+  cron:
+    name: "Delete exercises older than {{ registry.delete_exercises_older_than }} minutes"
+    minute: "0"
+    hour: "*"
+    job: "find /path/to/directory -type f -mmin +{{ registry.delete_exercises_older_than }} -delete"
+
+- name: Whatever
+  notify:
+    - Restart Docker
 
 - name: Create Docker network
   docker_network:

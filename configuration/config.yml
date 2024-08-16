@@ -13,10 +13,21 @@ registry:
 docker:
   domain: "docker.correctomatic.alvaromaceda.es"
 
-runner:
+correctomatic:
+  # Shared folder between the API and the correctomatic processes
   shared_folder: /exercises/shared
-  # minutes
-  delete_exercises_older_than: 60
+
+  # Shared network for the containers
+  network: correctomatic
+
+  api:
+    image: correctomatic/api
+    tag: latest
+    log_level: debug
+
+  runner:
+    # minutes
+    delete_exercises_older_than: 60
 
 # correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

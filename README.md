@@ -208,8 +208,6 @@ docker.listContainers({ all: true }, function (err, containers) {
 
 ### Test the redis server
 
-TO-DO: not tested
-
 The VPS's Redis server can be accessed using `redis-cli`, use the same password defined in `secrets/redis_password.yml`. Take in account that the redis server won't be accesible in production mode, the firewall ports are closed and redis is listening only at localhost:
 
 ```sh
@@ -219,18 +217,20 @@ redis-cli -h 192.168.56.56 -p 6379 -a 'your_password'
 PONG
 ```
 
-You can also use RedisInsight web frontend to debug the server:
+There is a docker compose file, `/utils/docker_compose_dashboards.yml`, that can be used to run RedisInsight and BullMQ dashboards.
+
+If you prefer to launch them by hand, to use RedisInsight web frontend to debug the server:
 
 ```sh
 # This is for keeping configuration, run
 # docker volume rm redisinsight when done
-docker volume create redisinsight
+docker volume create vps-redisinsight
 
 docker run \
   --rm \
   --network host \
   --name VPS-redisinsight \
-  -v redisinsight:/data \
+  -v vps-redisinsight:/data \
   redis/redisinsight
 ```
 The server can be accessed at [http://localhost:5540](http://localhost:5540).

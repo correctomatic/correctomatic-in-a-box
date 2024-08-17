@@ -39,9 +39,10 @@
       when: development_mode
 
   roles:
-    - docker
-    - docker-registry
-    - nginx
-    - redis
-    - firewall
+    # - docker
+    # - docker-registry
+    # - nginx
+    # - redis
+    # - firewall
+    - api
     # - containers

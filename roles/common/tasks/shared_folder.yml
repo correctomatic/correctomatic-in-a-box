@@ -1,0 +1,15 @@
+- name: Ensure /exercises exists with root ownership and writable only by root
+  file:
+    path: /exercises
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create /exercises/shared with writable permissions for all users
+  file:
+    path: /exercises/shared
+    state: directory
+    mode: '0777'
+    owner: root
+    group: root

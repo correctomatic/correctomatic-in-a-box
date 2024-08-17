@@ -1,0 +1,29 @@
+# Launch with:
+# REDIS_PASSWORD=whatever docker compose -f docker_compose_dashboards.yml up
+services:
+  #----------------------------------------
+  # Monitoring services
+  #----------------------------------------
+  redis-insight:
+    image: redis/redisinsight
+    # container_name: correctomatic-redisinsight
+    ports:
+      - "5540:5540"
+    network_mode: host
+    volumes:
+      - vps-redisinsight:/data
+
+  bullmq-dashboard:
+    image: igrek8/bullmq-dashboard
+    # container_name: correctomatic-dashboard
+    ports:
+      - "3000:3000"
+    network_mode: host
+    command: [
+      "--redis-host", "correctomatic_vps",
+      "--bullmq-prefix", "bull",
+      "--redis-password", "${REDIS_PASSWORD}"
+      ]
+
+volumes:
+  vps-redisinsight:   # Connection data is saved here

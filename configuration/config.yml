@@ -15,7 +15,7 @@ docker:
 
 correctomatic:
   # Shared folder between the API and the correctomatic processes
-  shared_folder: /exercises/shared
+  shared_folder: /correctomatic/exercises
 
   # Shared network for the containers
   network: correctomatic
@@ -30,6 +30,8 @@ correctomatic:
     tag: latest
     # minutes
     delete_exercises_older_than: 3
+    # Directory with the certs to be copied to the containers
+    docker_certs_folder: /etc/docker
 
   starter:
     log_level: debug

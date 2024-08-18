@@ -1,0 +1,20 @@
+---
+- name: Define container names
+  set_fact:
+    containers:
+      - correctomatic-starter
+
+- name: Copy CA certificate to each container
+  shell: docker cp {{ correctomatic.runner.docker_certs_folder }}/ca/ca-certificate.pem {{ item }}:/certs/ca.pem
+  loop: "{{ containers }}"
+  # become: true
+
+- name: Copy client certificate to each container
+  shell: docker cp {{ correctomatic.runner.docker_certs_folder }}/certs/correctomatic-client-certificate.pem {{ item }}:/certs/cert.pem
+  loop: "{{ containers }}"
+  # become: true
+
+- name: Copy private key to each container
+  shell: docker cp {{ correctomatic.runner.docker_certs_folder }}/certs/correctomatic-private-key.pem {{ item }}:/certs/key.pem
+  loop: "{{ containers }}"
+  # become: true

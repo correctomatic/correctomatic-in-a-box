@@ -13,19 +13,35 @@
     name: "{{ correctomatic.network }}"
     state: present
 
-- name: Correctomatic Starter
+- name: Create correctomatic starter container
+  tags: debug
   docker_container:
     name: correctomatic-starter
     image: "{{ correctomatic.runner.image }}:{{ correctomatic.runner.tag }}"
-    state: started
+    state: present
     pull: yes
     volumes:
       # Exercises' folder
       - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
-      # Docker's certs dir
-      - "/etc/docker/certs:/certs:ro"
+
+    # Redis is running on the VPS
+    etc_hosts:
+      redis: host-gateway
+      docker-server: host-gateway
+    restart_policy: no
+    # register: container_creation
+
+# The docker's certificates are copied inside the containers
+- include_tasks: copy_certificates.yml
+
+# Now, the starter and completer can run
+# TO-DO: start containers
+- name: Start the Docker container
+  docker_container:
+    name: correctomatic-starter
+    state: started
     env:
-      PORT: "3000"
+      PROCESS: starter
       REDIS_HOST: redis
       REDIS_PORT: "6379"
       REDIS_USER: default
@@ -41,8 +57,4 @@
           "cert": "/certs/cert.pem",
           "key": "/certs/key.pem"
         }
-    # Redis is running on the VPS
-    etc_hosts:
-      redis: host-gateway
-      docker-server: host-gateway
-    restart_policy: no
+    # when: container_creation.changed

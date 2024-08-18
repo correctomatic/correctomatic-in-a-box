@@ -26,8 +26,19 @@ correctomatic:
     log_level: debug
 
   runner:
+    image: correctomatic/runner
+    tag: latest
     # minutes
-    delete_exercises_older_than: 60
+    delete_exercises_older_than: 3
+
+  starter:
+    log_level: debug
+
+  completer:
+    log_level: debug
+
+  notifier:
+    log_level: debug
 
 # correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

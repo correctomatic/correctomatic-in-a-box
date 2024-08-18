@@ -1,53 +1,48 @@
 ---
-- name: Create shared volume directory
-  file:
-    path: "{{ registry.shared_folder }}"
-    state: directory
+- include_tasks: ../../common/tasks/shared_folder.yml
 
-- name: Crontab for deleting old exercises
+- name: Create crontab entry for deleting old exercises
   cron:
-    name: "Delete exercises older than {{ registry.delete_exercises_older_than }} minutes"
+    name: "Delete old exercises"
     minute: "0"
     hour: "*"
-    job: "find /path/to/directory -type f -mmin +{{ registry.delete_exercises_older_than }} -delete"
+    job: "find {{ correctomatic.shared_folder }} -type f -mmin +{{ correctomatic.runner.delete_exercises_older_than }} -delete"
 
-- name: Whatever
-  notify:
-    - Restart Docker
-
-- name: Create Docker network
+- name: Create correctomatic's Docker network if not present
   docker_network:
-    name: custom_network
+    name: "{{ correctomatic.network }}"
     state: present
 
-- name: Run custom container 1
+- name: Correctomatic Starter
   docker_container:
-    name: custom_container1
-    image: your_custom_image1
+    name: correctomatic-starter
+    image: "{{ correctomatic.runner.image }}:{{ correctomatic.runner.tag }}"
     state: started
-    networks:
-      - name: custom_network
+    pull: yes
     volumes:
-      - /srv/shared:/srv/shared
-
-- name: Run custom container 2
-  docker_container:
-    name: custom_container2
-    image: your_custom_image2
-    state: started
-    networks:
-      - name: custom_network
-    volumes:
-      - /srv/shared:/srv/shared
-
-- name: Run PostgreSQL container
-  docker_container:
-    name: postgres_container
-    image: postgres
-    state: started
-    networks:
-      - name: custom_network
-    volumes:
-      - /srv/postgresql:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: your_password
+      # Exercises' folder
+      - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
+      # Docker's certs dir
+      - "/etc/docker/certs:/certs:ro"
+    env:
+      PORT: "3000"
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_USER: default
+      REDIS_PASSWORD: "{{ redis_password }}"
+      LOG_LEVEL: "{{ correctomatic.starter.log_level }}"
+      UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
+      DOCKER_OPTIONS: |
+        {
+          "host": "docker-server",
+          "protocol": "https",
+          "port": 2376,
+          "ca": "/certs/ca.pem",
+          "cert": "/certs/cert.pem",
+          "key": "/certs/key.pem"
+        }
+    # Redis is running on the VPS
+    etc_hosts:
+      redis: host-gateway
+      docker-server: host-gateway
+    restart_policy: no

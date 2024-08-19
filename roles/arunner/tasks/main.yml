@@ -13,33 +13,23 @@
     name: "{{ correctomatic.network }}"
     state: present
 
+# The docker's certificates are copied in a folder with 700 access
+- include_tasks: copy_certificates.yml
+
 - name: Create correctomatic starter container
   tags: debug
   docker_container:
     name: correctomatic-starter
     image: "{{ correctomatic.runner.image }}:{{ correctomatic.runner.tag }}"
-    state: present
+    state: started
     pull: yes
     volumes:
       # Exercises' folder
       - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
-
-    # Redis is running on the VPS
-    etc_hosts:
-      redis: host-gateway
-      docker-server: host-gateway
-    restart_policy: no
-    # register: container_creation
-
-# The docker's certificates are copied inside the containers
-- include_tasks: copy_certificates.yml
-
-# Now, the starter and completer can run
-# TO-DO: start containers
-- name: Start the Docker container
-  docker_container:
-    name: correctomatic-starter
-    state: started
+      # Certs. Must mount the files because the dir is not readable
+      - "/correctomatic/certs/ca.pem:/certs/ca.pem:ro"
+      - "/correctomatic/certs/cert.pem:/certs/cert.pem:ro"
+      - "/correctomatic/certs/key.pem:/certs/key.pem:ro"
     env:
       PROCESS: starter
       REDIS_HOST: redis
@@ -57,4 +47,11 @@
           "cert": "/certs/cert.pem",
           "key": "/certs/key.pem"
         }
-    # when: container_creation.changed
+    # Redis is running on the VPS
+    etc_hosts:
+      redis: host-gateway
+      docker-server: host-gateway
+    restart_policy: no
+    # register: container_creation
+
+

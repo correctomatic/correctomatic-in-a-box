@@ -16,6 +16,8 @@
 # The docker's certificates are copied in a folder with 700 access
 - include_tasks: copy_certificates.yml
 
+# The etc_hosts_dict is a dictionary with the hostname as key and the value as the IP
+# We need it to pass dynamic etc_hosts entries to the container
 - name: Define dynamic etc_hosts entries
   set_fact:
     etc_hosts_dict: >
@@ -48,17 +50,19 @@
       REDIS_PASSWORD: "{{ redis_password }}"
       LOG_LEVEL: "{{ correctomatic.starter.log_level }}"
       UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
+      # We need to use to_json to convert the dictionary to a string
       DOCKER_OPTIONS: |
-        {
-          "host": "docker.correctomatic.alvaromaceda.es",
-          "protocol": "https",
-          "port": 2376,
-          "ca": "/certs/ca.pem",
-          "cert": "/certs/cert.pem",
-          "key": "/certs/key.pem"
-        }
+        {{
+          {
+            "host": docker.domain,
+            "protocol": "https",
+            "port": 2376,
+            "ca": "/certs/ca.pem",
+            "cert": "/certs/cert.pem",
+            "key": "/certs/key.pem"
+          } | to_json
+        }}
     etc_hosts: "{{ etc_hosts_dict }}"
-    restart_policy: no
-    # register: container_creation
+    restart_policy: always
 
 

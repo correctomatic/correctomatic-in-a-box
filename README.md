@@ -217,7 +217,10 @@ redis-cli -h 192.168.56.56 -p 6379 -a 'your_password'
 PONG
 ```
 
-There is a docker compose file, `/utils/docker_compose_dashboards.yml`, that can be used to run RedisInsight and BullMQ dashboards.
+There is a docker compose file, `/utils/docker_compose_dashboards.yml`, that can be used to run RedisInsight and BullMQ dashboards:
+```sh
+REDIS_PASSWORD=<password> docker compose -f utils/docker_compose_dashboards.yml up
+```
 
 If you prefer to launch them by hand, to use RedisInsight web frontend to debug the server:
 

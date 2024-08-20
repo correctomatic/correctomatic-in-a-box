@@ -20,6 +20,13 @@
     - name: Print the value of registry domain
       debug:
         msg: "The value of registry domain is {{ registry.domain }}"
+    # We will add the user running the playbook to the docker group
+    - name: Get the username running the deploy
+      become: false
+      command: whoami
+      register: username_on_the_host_output
+    - set_fact:
+        ansible_user: "{{ username_on_the_host_output.stdout }}"
 
   # Additional tasks when running in development mode
   tasks:

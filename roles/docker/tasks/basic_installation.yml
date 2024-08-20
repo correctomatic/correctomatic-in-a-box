@@ -5,11 +5,27 @@
     state: present
     update_cache: yes
 
-# I think this is not neccessary
-# - name: Install Docker Compose
-#   apt:
-#     name: docker-compose
-#     state: present
+# The systemd unit file comes with the hosts' configuration, and we want to configure everything in daemon.json
+# If we configure the hosts in both places, we get an error
+- name: Ensure directory for systemd overrides exists
+  ansible.builtin.file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: '0755'
+
+- name: Overrides host configuration for systemd
+  template:
+    src: override.conf.j2
+    dest: /etc/systemd/system/docker.service.d/override.conf
+  notify:
+    - Restart Docker
+
+- name: Copy Docker daemon.json
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+  notify:
+    - Restart Docker
 
 - name: Ensure Docker service is running
   service:
@@ -21,3 +37,8 @@
   file:
     path: /etc/docker
     state: directory
+
+- name: Add user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker

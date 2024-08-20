@@ -4,5 +4,9 @@
   "tlscacert": "{{docker_ca.certificate}}",
   "tlscert": "{{docker_server.certificate}}",
   "tlskey": "{{docker_server.private_key}}",
-  "tlsverify": true
+  "tlsverify": true,
+
+  "insecure-registries" : [
+    "{{ registry.domain }}:{{ registry.internal_port }}"
+  ]
 }

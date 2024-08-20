@@ -1,3 +1,3 @@
 ---
 - include_tasks: basic_installation.yml
-- include_tasks: remote_access.yml
+- include_tasks: generate_certificates.yml

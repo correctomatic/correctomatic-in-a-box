@@ -1,12 +1,9 @@
 ---
 - include_tasks: ../../common/tasks/shared_folder.yml
 
-- name: Create crontab entry for deleting old exercises
-  cron:
-    name: "Delete old exercises"
-    minute: "0"
-    hour: "*"
-    job: "find {{ correctomatic.shared_folder }} -type f -mmin +{{ correctomatic.runner.delete_exercises_older_than }} -delete"
+# Cleanup of old exercises and containers, just in case
+- include_tasks: delete_old_exercises.yml
+- include_tasks: delete_old_containers.yml
 
 - name: Create correctomatic's Docker network if not present
   docker_network:
@@ -15,57 +12,8 @@
 
 # The docker's certificates are copied in a folder with 700 access
 - include_tasks: copy_certificates.yml
-
-# Log in to the docker local registry
+# Log in to the docker local registry, for pulling
 - include_tasks: docker_login.yml
 
-# The etc_hosts_dict is a dictionary with the hostname as key and the value as the IP
-# We need it to pass dynamic etc_hosts entries to the container
-- name: Define dynamic etc_hosts entries
-  set_fact:
-    etc_hosts_dict: >
-      {{
-        {
-          (docker.domain): 'host-gateway',
-          'redis': 'host-gateway'
-        }
-      }}
-
-- name: Create correctomatic starter container
-  tags: debug
-  docker_container:
-    name: correctomatic-starter
-    image: "{{ correctomatic.runner.image }}:{{ correctomatic.runner.tag }}"
-    state: started
-    pull: yes
-    volumes:
-      # Exercises' folder
-      - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
-      # Certs. Must mount the files because the dir is not readable
-      - "/correctomatic/certs/ca.pem:/certs/ca.pem:ro"
-      - "/correctomatic/certs/cert.pem:/certs/cert.pem:ro"
-      - "/correctomatic/certs/key.pem:/certs/key.pem:ro"
-    env:
-      PROCESS: starter
-      REDIS_HOST: redis
-      REDIS_PORT: "6379"
-      REDIS_USER: default
-      REDIS_PASSWORD: "{{ redis_password }}"
-      LOG_LEVEL: "{{ correctomatic.starter.log_level }}"
-      UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
-      # We need to use to_json to convert the dictionary to a string
-      DOCKER_OPTIONS: |
-        {{
-          {
-            "host": docker.domain,
-            "protocol": "https",
-            "port": 2376,
-            "ca": "/certs/ca.pem",
-            "cert": "/certs/cert.pem",
-            "key": "/certs/key.pem"
-          } | to_json
-        }}
-    etc_hosts: "{{ etc_hosts_dict }}"
-    restart_policy: always
-
-
+# Correctomatic processes
+- include_tasks: starter.yml

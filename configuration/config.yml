@@ -20,6 +20,8 @@ correctomatic:
   # Shared network for the containers
   network: correctomatic
 
+  docker_timeout: 10000
+
   api:
     image: correctomatic/api
     tag: latest
@@ -29,7 +31,7 @@ correctomatic:
     image: correctomatic/runner
     tag: latest
     # minutes
-    delete_exercises_older_than: 3
+    delete_corrections_older_than: 3
     # Directory with the certs to be copied to the containers
     docker_certs_folder: /etc/docker
 

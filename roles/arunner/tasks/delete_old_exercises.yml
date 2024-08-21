@@ -1,0 +1,7 @@
+---
+- name: Create crontab entry for deleting old exercises
+  cron:
+    name: "Delete old exercises"
+    minute: "0"
+    hour: "*"
+    job: "find {{ correctomatic.shared_folder }} -type f -mmin +{{ correctomatic.runner.delete_corrections_older_than }} -delete"

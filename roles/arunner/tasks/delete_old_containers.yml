@@ -1,0 +1,12 @@
+---
+- name: Copy the cleanup script to the target machine
+  copy:
+    src: delete_old_containers.sh
+    dest: /usr/local/bin/delete_old_containers.sh
+    mode: '0755'  # Make the script executable
+
+- name: Schedule the container cleanup script to run every M minutes
+  cron:
+    name: "Remove old correction containers"
+    minute: "*/5"
+    job: "/usr/local/bin/delete_old_containers.sh {{ correctomatic.runner.delete_corrections_older_than }} >/dev/null 2>&1"

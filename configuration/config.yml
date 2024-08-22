@@ -2,7 +2,7 @@
 # some additional tasks (open ports, etc.)
 development_mode: yes
 
-timezone: "Europe/Madrid"
+server_timezone: "Europe/Madrid"
 
 # Change if you have a non-standard ssh port
 ssh_port: 22

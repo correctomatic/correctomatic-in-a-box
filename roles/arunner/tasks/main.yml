@@ -12,8 +12,6 @@
 
 # The docker's certificates are copied in a folder with 700 access
 - include_tasks: copy_certificates.yml
-# Log in to the docker local registry, for pulling
-- include_tasks: docker_login.yml
 
 # Correctomatic processes
 - include_tasks: starter.yml

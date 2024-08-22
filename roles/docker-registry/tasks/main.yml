@@ -49,3 +49,9 @@
     # env:
     #   REGISTRY_LOG_LEVEL: debug
     #   REGISTRY_LOG_FORMATTER: json # Options are text, json, and logstash
+
+- name: Add entry to /etc/hosts file
+  lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{ registry.domain }}"
+    state: present

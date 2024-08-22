@@ -16,7 +16,7 @@
   pre_tasks:
     - name: Set the system timezone
       timezone:
-        name: "America/New_York"
+        name: "{{ server_timezone }}"
     - name: Print the environment configuration
       debug:
         msg: "Launching in mode: {{ 'development' if development_mode else 'production'}}"
@@ -44,6 +44,14 @@
         groups=docker
         append=yes
       when: development_mode and false
+
+  # Don't needed, dockerode should be able to login to the registry
+  # post_tasks:
+  #   - name: Log in to Docker registry
+  #     docker_login:
+  #       registry_url: "https://{{ registry.domain }}"
+  #       username: "{{ correctomatic_registry_user }}"
+  #       password: "{{ correctomatic_registry_password }}"
 
   roles:
     - docker

@@ -22,9 +22,9 @@
       # Exercises' folder
       - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
       # Certs. Must mount the files because the dir is not readable
-      - "/correctomatic/certs/ca.pem:/certs/ca.pem:ro"
-      - "/correctomatic/certs/cert.pem:/certs/cert.pem:ro"
-      - "/correctomatic/certs/key.pem:/certs/key.pem:ro"
+      - "/correctomatic/secrets/certs/ca.pem:/certs/ca.pem:ro"
+      - "/correctomatic/secrets/certs/cert.pem:/certs/cert.pem:ro"
+      - "/correctomatic/secrets/certs/key.pem:/certs/key.pem:ro"
     env:
       PROCESS: starter
       REDIS_HOST: redis

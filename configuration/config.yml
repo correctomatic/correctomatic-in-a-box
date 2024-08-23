@@ -48,6 +48,3 @@ correctomatic:
 
 # correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"
-
-# DEBUG, should be protected in production
-correctomatic_api_domain: "api.correctomatic.alvaromaceda.es"

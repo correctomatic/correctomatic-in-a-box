@@ -10,8 +10,8 @@
     name: "{{ correctomatic.network }}"
     state: present
 
-# The docker's certificates are copied in a folder with 700 access
-- include_tasks: copy_certificates.yml
+# The docker's secrets are in a folder with restricted access
+- include_tasks: prepare_secrets.yml
 
 # Correctomatic processes
 - include_tasks: starter.yml

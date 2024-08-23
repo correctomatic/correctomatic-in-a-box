@@ -19,9 +19,6 @@ The playbook **must** be configured modifying the `configuration/config.yml` fil
 - `docker`: update the domain to a valid value in your domain, it will point to localhost in production, but you will probably use it for debugging.
 - `lets_encrypt_email`: TO-DO
 
-These values are used only for development, you can leave them if you are running the playbook in production:
-- `correctomatic_api_domain`: used only in development mode, the API **must** be protected in production.
-
 ### Secrets
 
 TO-DO

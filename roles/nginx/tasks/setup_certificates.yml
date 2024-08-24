@@ -5,10 +5,18 @@
     state: present
     update_cache: yes
 
+- name: Install Certbot Nginx plugin
+  apt:
+    name: python3-certbot-nginx
+    state: present
+
 - name: Obtain SSL certificate from Let's Encrypt
+  # command: >
+  #   certbot certonly --non-interactive --agree-tos --email {{ lets_encrypt_email }}
+  #   --standalone -d {{ registry.domain }}
   command: >
-    certbot certonly --non-interactive --agree-tos --email {{ lets_encrypt_email }}
-    --standalone -d {{ registry.domain }}
+    certbot --nginx --non-interactive --agree-tos --email {{ lets_encrypt_email }}
+    -d {{ registry.domain }}
   environment:
     PATH: "{{ ansible_env.PATH }}"
   args:

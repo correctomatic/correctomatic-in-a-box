@@ -1,5 +1,5 @@
 [vps]
-teapot.correctomatic.org ansible_user=ansible
+teapot.correctomatic.org ansible_user=ansible ansible_become_pass='{{ sudo_password }}'
 
 [vps:vars]
 ansible_python_interpreter=/usr/bin/python3

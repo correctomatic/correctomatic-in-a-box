@@ -1,5 +1,5 @@
 [vps]
-correctomatic_vps ansible_user=ansible
+correctomatic_vps ansible_user=ansible ansible_become_pass='{{ sudo_password }}'
 
 [vps:vars]
 ansible_python_interpreter=/usr/bin/python3

@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
-REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+
+DEFAULT_REGISTRY_DOMAIN="dev.registry.correctomatic.org"
+REGISTRY_DOMAIN="${1:-$DEFAULT_REGISTRY_DOMAIN}"
 
 sudo mkdir -p /etc/docker/certs.d/$REGISTRY_DOMAIN
 

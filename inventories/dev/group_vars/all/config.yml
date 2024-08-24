@@ -8,12 +8,12 @@ server_timezone: "Europe/Madrid"
 ssh_port: 22
 
 registry:
-  domain: "registry.correctomatic.alvaromaceda.es"
+  domain: "dev.registry.correctomatic.org"
   data_directory: "/var/registry"
   internal_port: 5000
 
 docker:
-  domain: "docker.correctomatic.alvaromaceda.es"
+  domain: "dev.docker.correctomatic.org"
 
 correctomatic:
   # Shared folder between the API and the correctomatic processes

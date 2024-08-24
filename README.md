@@ -26,10 +26,16 @@ TO-DO
 ## Running the playbook
 [Install ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), you will need it to run the playbook. Usually done with `pipx install --include-deps ansible`.
 
-Run the playbook:
+Run the playbook in development mode:
 ```sh
 ansible-playbook playbook.yml
 ```
+
+Run the playbook in production mode:
+```sh
+ansible-playbook playbook.yml -i inventories/prod/hosts
+```
+
 
 ## Working with the private registry
 

@@ -1,0 +1,5 @@
+[vps]
+correctomatic_vps ansible_user=ansible
+
+[vps:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -1,5 +1,3 @@
-# ansible_become_password: ansible
-
 # Some task can't be executed in a dev environment, ie, certbot, and we will need
 # some additional tasks (open ports, etc.)
 development_mode: yes
@@ -7,7 +5,7 @@ development_mode: yes
 server_timezone: "Europe/Madrid"
 
 # Change if you have a non-standard ssh port
-# ansible_port: 22
+ssh_port: 22
 
 registry:
   domain: "registry.correctomatic.alvaromaceda.es"

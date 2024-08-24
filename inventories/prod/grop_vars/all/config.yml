@@ -1,6 +1,6 @@
 # Some task can't be executed in a dev environment, ie, certbot, and we will need
 # some additional tasks (open ports, etc.)
-development_mode: yes
+development_mode: no
 
 server_timezone: "Europe/Madrid"
 
@@ -8,12 +8,12 @@ server_timezone: "Europe/Madrid"
 ssh_port: 22
 
 registry:
-  domain: "registry.correctomatic.alvaromaceda.es"
+  domain: "registry.correctomatic.org"
   data_directory: "/var/registry"
   internal_port: 5000
 
 docker:
-  domain: "docker.correctomatic.alvaromaceda.es"
+  domain: "docker.correctomatic.org"
 
 correctomatic:
   # Shared folder between the API and the correctomatic processes
@@ -27,7 +27,7 @@ correctomatic:
   api:
     image: correctomatic/api
     tag: latest
-    log_level: debug
+    log_level: info
 
   runner:
     image: correctomatic/runner
@@ -38,13 +38,13 @@ correctomatic:
     docker_certs_folder: /etc/docker
 
   starter:
-    log_level: debug
+    log_level: info
 
   completer:
-    log_level: debug
+    log_level: info
 
   notifier:
-    log_level: debug
+    log_level: info
 
-# correctomatic_app_domain: "correctomatic.alvaromaceda.es"
+# correctomatic_app_domain: "correctomatic.org"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

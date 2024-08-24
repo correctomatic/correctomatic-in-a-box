@@ -12,16 +12,20 @@ If you want to install the Correctomatic in multiple servers, you could probably
 
 ## Configuration
 
-The playbook **must** be configured modifying the `configuration/config.yml` file. The most important entries are:
+The playbook **must** be configured modifying the `inventories/<environment>/group_vars/all/config.yml` file. The most important entries are:
 
 - `development_mode`: should be `no` for production. If you want to run the playbook in development mode, follow the instructions in the corresponding section.
-- `registry`: update the domain to the one you will use for the correctomatic's internal registry.
-- `docker`: update the domain to a valid value in your domain, it will point to localhost in production, but you will probably use it for debugging.
+- `registry.domain`: update the domain to the one you will use for the correctomatic's internal registry.
+- `docker.domain`: update the domain to a valid value in your domain, it will point to localhost in production, but you will probably use it for debugging.
 - `lets_encrypt_email`: TO-DO
 
 ### Secrets
 
+You must create the production's secrets file before running the playbook. The file is located at `inventories/prod/group_vars/all/secrets.yml`. The file should contain the following entries:
+
+```yaml
 TO-DO
+ansible-vault encrypt inventories/prod/group_vars/secrets.yml
 
 ## Running the playbook
 [Install ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), you will need it to run the playbook. Usually done with `pipx install --include-deps ansible`.
@@ -33,7 +37,7 @@ ansible-playbook playbook.yml
 
 Run the playbook in production mode:
 ```sh
-ansible-playbook playbook.yml -i inventories/prod/hosts
+ansible-playbook playbook.yml -i inventories/prod/hosts --ask-vault-pass
 ```
 
 

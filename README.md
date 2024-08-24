@@ -21,11 +21,11 @@ The playbook **must** be configured modifying the `inventories/<environment>/gro
 
 ### Secrets
 
-You must create the production's secrets file before running the playbook. The file is located at `inventories/prod/group_vars/all/secrets.yml`. The file should contain the following entries:
+You must create the production's secrets file before running the playbook. The file is located at `inventories/prod/group_vars/all/secrets.yml`. The file should contain the entries in `secrets_template.yml`. Encrypt the file with `ansible-vault`:
 
-```yaml
-TO-DO
-ansible-vault encrypt inventories/prod/group_vars/secrets.yml
+```sh
+ansible-vault encrypt inventories/prod/group_vars/all/secrets.yml
+```
 
 ## Running the playbook
 [Install ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), you will need it to run the playbook. Usually done with `pipx install --include-deps ansible`.

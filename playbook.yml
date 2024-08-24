@@ -12,7 +12,7 @@
     - secrets/redis_password.yml
     - secrets/registry_users.yml
     - secrets/registry_password.yml
-                                                                                                                                 
+
   pre_tasks:
     - name: Set the system timezone
       timezone:
@@ -30,20 +30,21 @@
 
   # Additional tasks when running in development mode
   tasks:
-    - name: Install utility packages
-      apt:
-        pkg:
-          - net-tools
-          - vim
-        state: present
-        update_cache: yes
-      when: development_mode and false
-    - name: Add ansible user to docker group
-      user:
-        name=ansible
-        groups=docker
-        append=yes
-      when: development_mode and false
+    - name: Development mode extra configuration
+      block:
+        - name: Install utility packages
+          apt:
+            pkg:
+              - net-tools
+              - vim
+            state: present
+            update_cache: yes
+        - name: Add ansible user to docker group
+          user:
+            name: "{{ ansible_user }}"
+            groups: docker
+            append: yes
+      when: development_mode
 
   roles:
     - docker

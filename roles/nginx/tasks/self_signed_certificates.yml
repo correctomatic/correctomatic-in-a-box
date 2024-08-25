@@ -29,3 +29,24 @@
     # 3650 => 10 years from now
     selfsigned_not_after: "{{ lookup('pipe', 'date -d ' ~ 3650 ~ 'days +%Y%m%d%H%M%SZ') }}"
     state: present
+
+- name: Copy Let's Encrypt ssl options file
+  copy:
+    src: "options-ssl-nginx.conf"
+    dest: "/etc/letsencrypt/options-ssl-nginx.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Generate Diffie-Hellman parameters if not already present
+  command: openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048
+  args:
+    creates: /etc/letsencrypt/ssl-dhparams.pem
+
+- name: Ensure correct permissions for the dhparams file
+  file:
+    path: /etc/letsencrypt/ssl-dhparams.pem
+    owner: root
+    group: root
+    mode: '0644'
+

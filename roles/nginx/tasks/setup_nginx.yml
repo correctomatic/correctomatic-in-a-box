@@ -5,10 +5,18 @@
     state: present
     update_cache: yes
 
-- name: Configure Nginx for Docker registry
+- name: Configure Nginx for Docker registry (Development)
   template:
-    src: nginx-docker-registry.conf.j2
+    src: nginx-docker-registry.conf-dev.j2
     dest: /etc/nginx/sites-available/docker-registry
+  when: development_mode
+  notify: Reload Nginx
+
+- name: Configure Nginx for Docker registry (Production)
+  template:
+    src: nginx-docker-registry.conf-prod.j2
+    dest: /etc/nginx/sites-available/docker-registry
+  when: not development_mode
   notify: Reload Nginx
 
 - name: Enable Nginx site configuration

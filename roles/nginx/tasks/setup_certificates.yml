@@ -22,3 +22,10 @@
   args:
     creates: "/etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem"
   when: not development_mode
+
+- name: Setup cron job for certbot renewals
+  cron:
+    name: "Renew Let's Encrypt certificates"
+    job: "/usr/bin/certbot renew --quiet --renew-hook '/bin/systemctl reload nginx'"
+    hour: 3
+    minute: 0

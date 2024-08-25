@@ -52,7 +52,14 @@ docker tag $DOCKER_REGISTRY/$IMAGE $IMAGE
 
 ## Registry frontend
 
-The easiest way to interact with the registry is using a frontend. You can use the `docker-compose.yml` files in the `utils/registry_frontend` directory to run a frontend in the VPS.
+The easiest way to interact with the registry is using a frontend. You can use the `docker-compose.yml` files in the `utils/registry_frontend` directory to run a frontend in the VPS. Launch it with:
+
+```sh
+DOCKER_REGISTRY=<registry>
+docker compose -f utils/registry_frontend/docker-compose.yml up
+```
+
+Then you can access the frontend in the URL `https://<registry>/`.
 
 ## List images in the registry
 

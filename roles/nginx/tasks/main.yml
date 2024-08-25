@@ -9,5 +9,7 @@
 # are running the playbook in dev mode: it will use certbot for production
 # and a self-signed certificate for development
 - include_tasks: setup_certificates.yml
+  when: not development_mode
+  
 - include_tasks: self_signed_certificates.yml
   when: development_mode

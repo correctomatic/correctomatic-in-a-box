@@ -21,7 +21,6 @@
     PATH: "{{ ansible_env.PATH }}"
   args:
     creates: "/etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem"
-  when: not development_mode
 
 - name: Setup cron job for certbot renewals
   cron:

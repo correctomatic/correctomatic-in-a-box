@@ -46,6 +46,12 @@ correctomatic:
 
   notifier:
     log_level: debug
+    # In case you need to add some extra hosts for development
+    # They won't be added in production
+    extra_hosts_dev:
+      notification.host.one: 1.1.1.1
+      notification.host.two: 2.2.2.2
+
 
 # correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

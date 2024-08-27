@@ -28,5 +28,12 @@
         }
       }}
 
+- name: Add extra hosts to etc_hosts_dict in development
+  set_fact:
+    etc_hosts_dict: "{{ etc_hosts_dict | combine(correctomatic.notifier.extra_hosts_dev) }}"
+  when: development_mode
+
 # Correctomatic processes
-- include_tasks: starter.yml
+- include_tasks: correctomatic_starter.yml
+- include_tasks: correctomatic_completer.yml
+- include_tasks: correctomatic_notifier.yml

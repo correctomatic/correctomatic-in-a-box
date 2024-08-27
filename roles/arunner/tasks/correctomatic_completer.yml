@@ -1,34 +1,30 @@
 ---
-- name: Create correctomatic starter container
+- name: Create correctomatic completer container
   tags: debug
   docker_container:
-    name: correctomatic-starter
+    name: correctomatic-completer
     image: "{{ correctomatic.runner.image }}:{{ correctomatic.runner.tag }}"
     state: started
     pull: yes
     volumes:
       # Exercises' folder
       - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
-      # Certs. Must mount the files because the dir is not readable
+      # Docker certs. Must mount the files because the dir is not readable
       - "/correctomatic/secrets/certs/ca.pem:/certs/ca.pem:ro"
       - "/correctomatic/secrets/certs/cert.pem:/certs/cert.pem:ro"
       - "/correctomatic/secrets/certs/key.pem:/certs/key.pem:ro"
-      # Registry credentials
-      - "/correctomatic/secrets/registry_credentials.json:/run/registry_credentials.json:ro"
       # Docker connection options
       - "/correctomatic/docker_options.json:/run/docker_options.json:ro"
     env:
-      PROCESS: starter
+      PROCESS: completer
       REDIS_HOST: redis
       REDIS_PORT: "6379"
       REDIS_USER: default
       REDIS_PASSWORD: "{{ redis_password }}"
-      LOG_LEVEL: "{{ correctomatic.starter.log_level }}"
+      LOG_LEVEL: "{{ correctomatic.completer.log_level }}"
       UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
       DOCKER_TIMEOUT: "{{ correctomatic.docker_timeout }}"
       DOCKER_OPTIONS_FILE: "/run/docker_options.json"
-      DOCKER_PULL: "true"
-      DOCKER_REGISTRY_CREDENTIALS_FILE: "/run/registry_credentials.json"
     etc_hosts: "{{ etc_hosts_dict }}"
     restart_policy: unless-stopped
 

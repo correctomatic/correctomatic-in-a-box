@@ -13,5 +13,20 @@
 # The docker's secrets are in a folder with restricted access
 - include_tasks: prepare_secrets.yml
 
+# Prepare the options for connecting to the Docker daemon
+- include_tasks: prepare_docker_options.yml
+
+# The etc_hosts_dict is a dictionary with the hostname as key and the value as the IP
+# We need it to pass dynamic etc_hosts entries to the container
+- name: Define dynamic etc_hosts entries
+  set_fact:
+    etc_hosts_dict: >
+      {{
+        {
+          (docker.domain): 'host-gateway',
+          'redis': 'host-gateway'
+        }
+      }}
+
 # Correctomatic processes
 - include_tasks: starter.yml

@@ -1,16 +1,4 @@
 ---
-# The etc_hosts_dict is a dictionary with the hostname as key and the value as the IP
-# We need it to pass dynamic etc_hosts entries to the container
-- name: Define dynamic etc_hosts entries
-  set_fact:
-    etc_hosts_dict: >
-      {{
-        {
-          (docker.domain): 'host-gateway',
-          'redis': 'host-gateway'
-        }
-      }}
-
 - name: Create correctomatic starter container
   tags: debug
   docker_container:
@@ -27,6 +15,8 @@
       - "/correctomatic/secrets/certs/key.pem:/certs/key.pem:ro"
       # Registry credentials
       - "/correctomatic/secrets/registry_credentials.json:/run/registry_credentials.json:ro"
+      # Docker connection options
+      - "/correctomatic/docker_options.json:/run/docker_options.json:ro"
     env:
       PROCESS: starter
       REDIS_HOST: redis
@@ -36,18 +26,7 @@
       LOG_LEVEL: "{{ correctomatic.starter.log_level }}"
       UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
       DOCKER_TIMEOUT: "{{ correctomatic.docker_timeout }}"
-      # We need to use to_json to convert the dictionary to a string
-      DOCKER_OPTIONS: |
-        {{
-          {
-            "host": docker.domain,
-            "protocol": "https",
-            "port": 2376,
-            "ca": "/certs/ca.pem",
-            "cert": "/certs/cert.pem",
-            "key": "/certs/key.pem"
-          } | to_json
-        }}
+      DOCKER_OPTIONS_FILE: "/run/docker_options.json"
       DOCKER_PULL: "true"
       DOCKER_REGISTRY_CREDENTIALS_FILE: "/run/registry_credentials.json"
     etc_hosts: "{{ etc_hosts_dict }}"

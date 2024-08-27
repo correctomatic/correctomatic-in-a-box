@@ -1,0 +1,8 @@
+---
+- name: Copy Docker connection options
+  template:
+    src: docker_options.json.j2
+    dest: /correctomatic/docker_options.json
+    mode: '0644'
+    owner: root
+    group: docker

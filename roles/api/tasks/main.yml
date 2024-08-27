@@ -25,4 +25,4 @@
     # Redis is running on the VPS
     etc_hosts:
       redis: host-gateway
-    restart_policy: always
+    restart_policy: unless-stopped

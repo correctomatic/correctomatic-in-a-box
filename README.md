@@ -133,7 +133,8 @@ They should be copied to the local machine in a directory. For example, you can 
 The connection can be tested using environment variables. The following commands should be executed in the local machine:
 
 ```sh
-VPS_HOST=docker.correctomatic.alvaromaceda.es
+# This must be the domain configured in config.yml
+VPS_HOST=dev.docker.correctomatic.org
 
 
 export DOCKER_HOST=tcp://$VPS_HOST:2376

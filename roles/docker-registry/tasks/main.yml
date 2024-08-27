@@ -34,7 +34,7 @@
     image: registry:latest
     ports:
       - "{{ registry.internal_port }}:5000"
-    restart_policy: always
+    restart_policy: unless-stopped
     mounts:
       - type: bind
         source: "{{ registry.data_directory }}"

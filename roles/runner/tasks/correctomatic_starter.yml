@@ -29,7 +29,7 @@
       DOCKER_OPTIONS_FILE: "/run/docker_options.json"
       DOCKER_PULL: "true"
       DOCKER_REGISTRY_CREDENTIALS_FILE: "/run/registry_credentials.json"
-    etc_hosts: "{{ etc_hosts_dict }}"
+    etc_hosts: "{{ etc_hosts_correctomatic }}"
     restart_policy: unless-stopped
 
 

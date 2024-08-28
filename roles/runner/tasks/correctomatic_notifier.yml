@@ -14,5 +14,5 @@
       REDIS_PASSWORD: "{{ redis_password }}"
       LOG_LEVEL: "{{ correctomatic.notifier.log_level }}"
     # Should I add some host entries for development?
-    etc_hosts: "{{ etc_hosts_dict }}"
+    etc_hosts: "{{ etc_hosts_correctomatic }}"
     restart_policy: unless-stopped

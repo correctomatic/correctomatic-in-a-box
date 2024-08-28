@@ -25,7 +25,7 @@
       UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
       DOCKER_TIMEOUT: "{{ correctomatic.docker_timeout }}"
       DOCKER_OPTIONS_FILE: "/run/docker_options.json"
-    etc_hosts: "{{ etc_hosts_dict }}"
+    etc_hosts: "{{ etc_hosts_correctomatic }}"
     restart_policy: unless-stopped
 
 

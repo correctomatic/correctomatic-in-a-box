@@ -8,7 +8,7 @@ This document explains how to work with the registry.
 
 Test that registry works:
 ```bash
-REGISTRY_DOMAIN=registry.correctomatic.alvaromaceda.es
+REGISTRY_DOMAIN=<value of registry.domain in configuration>
 curl -u <username>:<password> --insecure -X GET https://$REGISTRY_DOMAIN/v2/_catalog
 ```
 
@@ -18,7 +18,7 @@ It must return a JSON like `{"repositories":[]}`
 
 Docker needs to trust the self-signed certificate used by the virtual machine. You won't need this in production because you will have a real certificate. **YOU MUST DO THIS EACH TIME THE CERTIFICATES ARE REGENERATED**
 
-There is a script that does this for you: `utils/registry_download_certs.sh`.
+There is a script that does this for you: `utils/registry_download_certs.sh <registry domain>`.
 
 ## Push images to the registry
 
@@ -35,19 +35,6 @@ IMAGE=<image>:<tag>
 
 docker image tag $IMAGE $DOCKER_REGISTRY/$IMAGE
 docker image push $DOCKER_REGISTRY/$IMAGE
-```
-
-## Pull images in the VPS
-
-To be able to use the images in the VPS, you need to pull them from the registry. You can use the following commands:
-
-```sh
-docker pull $DOCKER_REGISTRY/$IMAGE
-```
-
-And then tag them to remove the registry in the name:
-```sh
-docker tag $DOCKER_REGISTRY/$IMAGE $IMAGE
 ```
 
 ## Registry frontend

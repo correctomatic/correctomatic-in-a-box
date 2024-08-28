@@ -62,7 +62,7 @@ You will need to create some entries in `/etc/hosts` to reply the DNS entries th
 ```
 ### Prepare the virtual host
 
-1) Install an Ubuntu 22.04 server. The playbook expects a user `ansible` with password `ansible` (you can change the password modifying `secrets/sudo_password.yml`)
+1) Install an Ubuntu 22.04 server. The playbook expects a user `ansible` with password `ansible` (you can change the password modifying `secrets.yml`)
 
 2) Configure the network. You will need two networks in the virtual machine:
    - One NAT network, so the VPS can connect to the internet

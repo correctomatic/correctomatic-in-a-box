@@ -1,9 +1,4 @@
 ---
-
-- name: See the correctomatic var in the app role
-  debug:
-    var: correctomatic
-
 - block:
   - name: Ensure database for Correctomatic App is present
     postgresql_db:

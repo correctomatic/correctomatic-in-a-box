@@ -28,9 +28,33 @@
         }
       }}
 
-- name: Add extra hosts to etc_hosts_correctomatic in development
-  set_fact:
-    etc_hosts_correctomatic: "{{ etc_hosts_correctomatic | combine(correctomatic.notifier.extra_hosts_dev) }}"
+# host_computer will resolve to the local IP address of the VM's host computer
+- block:
+  - name: Obtain local IP address
+    become: false
+    local_action:
+      module: shell
+      cmd: |
+        ip route get $(getent hosts {{ inventory_hostname }} | awk '{ print $1 }') | \
+        awk '{ for (x=1;x<=NF;x++) if ($x=="src") print $(x+1) }'
+    register: local_address
+    changed_when: false
+
+  - name: Add extra hosts to etc_hosts_correctomatic in development
+    set_fact:
+      etc_hosts_correctomatic: >-
+        {{
+          etc_hosts_correctomatic |
+          combine(
+            correctomatic.notifier.extra_hosts_dev
+          ) |
+          combine(
+            {
+              'host_computer': local_address.stdout
+            }
+          )
+        }}
+
   when: development_mode
 
 # Correctomatic processes

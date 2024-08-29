@@ -49,7 +49,7 @@ correctomatic:
     # In case you need to add some extra hosts for development
     # They won't be added in production
     extra_hosts_dev:
-      host_machine:
+      # host_computer will be added with the IP of the host computer
       notification.host.one: 1.1.1.1
       notification.host.two: 2.2.2.2
 

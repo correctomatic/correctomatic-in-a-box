@@ -1,0 +1,48 @@
+---
+- name: Combine postgresql variables
+  set_fact:
+    postgresql: "{{ (postgresql | default({})) | combine(postgresql_defaults, recursive=True) }}"
+
+- name: Ensure python3-psycopg2 is installed
+  apt:
+    name: python3-psycopg2
+    state: present
+
+- name: Install PostgreSQL
+  apt:
+    name: "postgresql-{{ postgresql.version }}"
+    state: present
+
+- name: Ensure PostgreSQL service is enabled and started
+  service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- block:
+    - name: Set postgres DB user pasword
+      become: true
+      # become_user: postgres
+      postgresql_user:
+        db: postgres
+        name: postgres
+        password: "{{ postgresql.password }}"
+        role_attr_flags: "SUPERUSER,CREATEDB"
+
+    - name: Bind to all addresses if launched in development mode
+      set_fact:
+        postgress.listen_address: "*"
+
+  when: development_mode
+
+- name: Configure PostgreSQL
+  template:
+    src: postgresql.conf.j2
+    dest: "/etc/postgresql/{{ postgresql.version }}/main/postgresql.conf"
+  notify:
+    - Restart PostgreSQL
+
+- name: Ensure all configured locales are present.
+  locale_gen: "name={{ item }} state=present"
+  with_items: "{{ postgresql.locales }}"
+  register: locale_gen_result

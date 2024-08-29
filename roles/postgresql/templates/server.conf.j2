@@ -1,0 +1,16 @@
+listen_addresses = {{ postgresql.listen_addresses }}		# what IP address(es) to listen on;
+port = {{ postgresql.port }}				# (change requires restart)
+max_connections = {{ postgresql.max_connections }}			# (change requires restart)
+log_timezone = 'Europe/Madrid'
+
+# - Locale and Formatting -
+
+datestyle = 'iso, mdy'
+#intervalstyle = 'postgres'
+timezone = 'Europe/Madrid'
+lc_messages = {{ postgresql.default_locale }}		# locale for system error message
+					# strings
+lc_monetary = {{ postgresql.default_locale }}		# locale for monetary formatting
+lc_numeric = {{ postgresql.default_locale }}		# locale for number formatting
+lc_time = {{ postgresql.default_locale }}			# locale for time formatting
+default_text_search_config = 'pg_catalog.english'

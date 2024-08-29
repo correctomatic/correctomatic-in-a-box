@@ -1,8 +1,9 @@
 postgresql_defaults:
   version: 16
-  listen_address: 'localhost'
+  listen_addresses: 'localhost'
   port: 5432
   max_connections: 100
   locales:
     - 'en_US.UTF-8'
     - 'es_ES.UTF-8'
+  default_locale: 'es_ES.UTF-8'

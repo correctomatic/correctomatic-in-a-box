@@ -8,5 +8,6 @@
   loop:
     - { port: 2376, proto: "tcp", comment: "Docker server" }
     - { port: 6379, proto: "tcp", comment: "Redis server" }
+    - { port: 5432, proto: "tcp", comment: "PostgreSQL server" }
     - { port: 3000, proto: "tcp", comment: "Correctomatic API" }
   notify: reload ufw

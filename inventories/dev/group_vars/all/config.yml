@@ -53,11 +53,18 @@ correctomatic:
       notification.host.one: 1.1.1.1
       notification.host.two: 2.2.2.2
 
-postgresql:
-  version: 12
-  listen_address: 'localhost'
-  port: 5432
-  max_connections: 100
+  app:
+    domain: "app.correctomatic.org"
+    db:
+      name: "correctomatic"
+      # Be sure that the locale is installed in the system, see roles/postgresql/tasks/main.yml
+      encoding: "UTF8"
+      lc_collate: "es_ES.UTF-8"
+      lc_ctype: "es_ES.UTF-8"
+
+# You can configure postgresql here, see roles/ansible-role-postgresql/defaults/main.yml for valid options
+# postgresql:
+#   port: 5432
 
 # correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

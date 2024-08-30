@@ -4,6 +4,13 @@
   become_method: sudo
 
   pre_tasks:
+
+    - name: Stop unattended-upgrades service
+      systemd:
+        name: unattended-upgrades
+        state: stopped
+        enabled: no
+
     - name: Set the system timezone
       timezone:
         name: "{{ server_timezone }}"
@@ -35,6 +42,13 @@
             groups: docker
             append: yes
       when: development_mode
+
+  post_tasks:
+    - name: Start unattended-upgrades service
+      systemd:
+        name: unattended-upgrades
+        state: started
+        enabled: yes
 
   roles:
     - docker

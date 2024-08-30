@@ -44,5 +44,6 @@
     - firewall
     - api
     - runner
+    - postgresql
     - app
 

@@ -3,15 +3,30 @@
   set_fact:
     postgresql: "{{ (postgresql | default({})) | combine(postgresql_defaults, recursive=True) }}"
 
-- name: Bind to all addresses if launched in development mode
-  set_fact:
-    postgresql: "{{ postgresql | combine({'listen_addresses': '*'}, recursive=True) }}"
-  when: development_mode
-
 - name: Install required utilities for becoming unprivileged user
   apt:
     name: acl
     state: present
+
+- block:
+  - name: Bind to all addresses if launched in development mode
+    set_fact:
+      postgresql: "{{ postgresql | combine({'listen_addresses': '*'}, recursive=True) }}"
+
+  - name: Allow remote connections for all users
+    lineinfile:
+      path: "/etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf"
+      insertafter: "^#.*TYPE.*DATABASE.*USER.*ADDRESS.*METHOD"
+      line: "host    all             all    0.0.0.0/0    scram-sha-256"
+    notify: Restart PostgreSQL
+
+  - name: Change password for 'postgres' user
+    become_user: postgres
+    postgresql_user:
+      name: postgres
+      password: "{{ postgres_password }}"
+
+  when: development_mode
 
 - name: Ensure python3-psycopg2 is installed
   apt:

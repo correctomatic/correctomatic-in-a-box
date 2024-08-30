@@ -8,6 +8,22 @@
     name: acl
     state: present
 
+- name: Ensure python3-psycopg2 is installed
+  apt:
+    name: python3-psycopg2
+    state: present
+
+- name: Install PostgreSQL
+  apt:
+    name: "postgresql-{{ postgresql.version }}"
+    state: present
+
+- name: Ensure PostgreSQL service is enabled and started
+  service:
+    name: postgresql
+    state: started
+    enabled: true
+
 - block:
   - name: Bind to all addresses if launched in development mode
     set_fact:
@@ -27,22 +43,6 @@
       password: "{{ postgres_password }}"
 
   when: development_mode
-
-- name: Ensure python3-psycopg2 is installed
-  apt:
-    name: python3-psycopg2
-    state: present
-
-- name: Install PostgreSQL
-  apt:
-    name: "postgresql-{{ postgresql.version }}"
-    state: present
-
-- name: Ensure PostgreSQL service is enabled and started
-  service:
-    name: postgresql
-    state: started
-    enabled: true
 
 - name: Configure PostgreSQL
   template:

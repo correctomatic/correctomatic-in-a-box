@@ -19,5 +19,13 @@
       db: "{{ correctomatic.app.db.name }}"
       query: "GRANT ALL PRIVILEGES ON DATABASE {{ correctomatic.app.db.name }} TO {{ app_db_user }}"
 
+  # Note: the DB port is closed by default, so we need to open it in the firewall manually when needed
+  - name: Allow remote connections for app user
+    lineinfile:
+      path: "/etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf"
+      insertafter: "^#.*TYPE.*DATABASE.*USER.*ADDRESS.*METHOD"
+      line: "host    {{ correctomatic.app.db.name }}             {{ app_db_user }}    0.0.0.0/0    scram-sha-256"
+    notify: Restart PostgreSQL
+
   become: true
   become_user: postgres

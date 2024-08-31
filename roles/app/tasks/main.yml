@@ -30,9 +30,14 @@
   become: true
   become_user: postgres
 
+# --------------------------------------------------------------------------------------------------------
+# This is a temporary way of deploying the app, because the app is in early stages of development
+# and we need to rebuild the app every time we deploy it.
+# --------------------------------------------------------------------------------------------------------
+
 # TEMP: Builds the Docker image from the repo
 - include_tasks: get_image.yml
 - include_tasks: generate_configuration.yml
 
 # Starts the Docker container
-# - include_tasks: start_container.yml
+- include_tasks: start_container.yml

@@ -7,14 +7,15 @@
 
 - name: Clone the repository
   git:
-    repo: 'https://github.com/correctomatic/correctomatic-app.git'
+    repo: "{{ correctomatic.app.repo }}"
+    version: "{{ correctomatic.app.branch }}"
     dest: /tmp/correctomatic-app
     update: yes
 
 - name: Build the Docker image
   docker_image:
-    build:
-      path: /tmp/correctomatic-app
     name: correctomatic/app
     tag: latest
     source: build
+    build:
+      path: /tmp/correctomatic-app

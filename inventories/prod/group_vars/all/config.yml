@@ -55,6 +55,9 @@ correctomatic:
       encoding: "UTF8"
       lc_collate: "es_ES.UTF-8"
       lc_ctype: "es_ES.UTF-8"
+    # TEMP
+    repo: "https://github.com/correctomatic/correctomatic-app.git"
+    branch: "master"
 
 # You can configure postgresql here, see roles/ansible-role-postgresql/defaults/main.yml for valid options
 postgresql:

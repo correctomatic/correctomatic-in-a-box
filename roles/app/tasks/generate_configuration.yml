@@ -1,7 +1,23 @@
 ---
-- name: Create the configuration directory
+- name: Create the app directory
   file:
     path: /correctomatic/app
+    state: directory
+    mode: '0755'
+    owner: root
+    group: docker
+
+- name: Create the configuration directory
+  file:
+    path: /correctomatic/app/config
+    state: directory
+    mode: '0755'
+    owner: root
+    group: docker
+
+- name: Create the uploads directory
+  file:
+    path: /correctomatic/app/uploads
     state: directory
     mode: '0755'
     owner: root
@@ -10,20 +26,20 @@
 - name: Create the configuration file
   template:
     src: correctomatic.json.j2
-    dest: /correctomatic/app/correctomatic.json
+    dest: /correctomatic/app/config/correctomatic.json
 
 - name: Generate a private key
   community.crypto.openssl_privatekey:
-    path: /correctomatic/app/private.key
+    path: /correctomatic/app/config/private.key
     type: RSA
     size: 2048
 
 - name: Generate a public key from the private key
   community.crypto.openssl_publickey:
-    path: /correctomatic/app/public.key
-    privatekey_path: /correctomatic/app/private.key
+    path: /correctomatic/app/config/public.key
+    privatekey_path: /correctomatic/app/config/private.key
 
 - name: Change permissions of the private key file to be readable by all
   file:
-    path: /correctomatic/app/private.key
+    path: /correctomatic/app/config/private.key
     mode: '0644'

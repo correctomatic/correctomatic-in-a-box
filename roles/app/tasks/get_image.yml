@@ -12,10 +12,44 @@
     dest: /tmp/correctomatic-app
     update: yes
 
-- name: Build the Docker image
-  docker_image:
-    name: correctomatic/app
-    tag: latest
-    source: build
-    build:
-      path: /tmp/correctomatic-app
+- name: Compute checksum of the build directory
+  shell: |
+    find /tmp/correctomatic-app -type f ! -path "/tmp/correctomatic-app/.git/*"  -exec md5sum {} \; | sort | md5sum | awk '{print $1}'
+  register: current_checksum
+  changed_when: false
+
+- name: Check if the checksum file exists
+  stat:
+    path: /tmp/app_last_build_checksum
+  register: checksum_stat
+
+- name: Read last build checksum from file
+  command: cat /tmp/app_last_build_checksum
+  register: last_build_checksum
+  failed_when: false
+  changed_when: false
+  when: checksum_stat.stat.exists
+
+- block:
+
+  - name: Show rebuild message
+    debug:
+      msg: "Rebuilding the Docker image because the repository has changed"
+
+  - name: Build the Docker image with no cache if the checksum changes
+    docker_image:
+      name: correctomatic/app
+      tag: latest
+      source: build
+      force_source: yes
+      build:
+        path: /tmp/correctomatic-app
+        nocache: yes
+
+  when: current_checksum.stdout != (last_build_checksum.stdout | default(''))
+
+- name: Save the checksum for future reference
+  copy:
+    content: "{{ current_checksum.stdout }}"
+    dest: /tmp/app_last_build_checksum
+    mode: '0644'

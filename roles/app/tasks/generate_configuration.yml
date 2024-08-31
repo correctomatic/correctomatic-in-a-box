@@ -35,7 +35,7 @@
     size: 2048
 
 - name: Generate a public key from the private key
-  community.crypto.openssl_publickey:
+  openssl_publickey:
     path: /correctomatic/app/config/public.key
     privatekey_path: /correctomatic/app/config/private.key
 

@@ -1,0 +1,15 @@
+---
+# This is a temporary way of deploying the app, because the app is in early stages of development
+# and we need to rebuild the app every time we deploy it.
+
+# The repository contains
+
+
+
+- name: Start the Docker container
+  docker_container:
+    name: correctomatic-app
+    image: correctomatic/app
+    state: started
+    ports:
+      - "80:80"  # Adjust as necessary

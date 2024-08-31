@@ -57,8 +57,8 @@ correctomatic:
       lc_ctype: "es_ES.UTF-8"
 
 # You can configure postgresql here, see roles/ansible-role-postgresql/defaults/main.yml for valid options
-# postgresql:
-#   port: 5432
+postgresql:
+  version: 16
 
 # correctomatic_app_domain: "correctomatic.org"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

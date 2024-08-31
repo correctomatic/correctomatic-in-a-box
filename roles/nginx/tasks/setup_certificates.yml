@@ -11,16 +11,13 @@
     state: present
 
 - name: Obtain SSL certificate from Let's Encrypt
-  # command: >
-  #   certbot certonly --non-interactive --agree-tos --email {{ lets_encrypt_email }}
-  #   --standalone -d {{ registry.domain }}
   command: >
     certbot --nginx --non-interactive --agree-tos --email {{ lets_encrypt_email }}
-    -d {{ registry.domain }}
+    -d {{ domain }}
   environment:
     PATH: "{{ ansible_env.PATH }}"
   args:
-    creates: "/etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem"
+    creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
 
 - name: Setup cron job for certbot renewals
   cron:

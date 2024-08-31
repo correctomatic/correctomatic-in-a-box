@@ -1,5 +1,13 @@
 # Assumes that docker is already installed
 ---
+- name: Set the list of domains
+  set_fact:
+    nginx_domains:
+      - name: "registry"
+        domain: "{{ registry.domain }}"
+      - name: "app"
+        domain: "{{ correctomatic.app.domain }}"
+
 - include_tasks: setup_nginx.yml
 
 # Docker registry users are managed by nginx
@@ -10,6 +18,18 @@
 # and a self-signed certificate for development
 - include_tasks: setup_certificates.yml
   when: not development_mode
-  
+  loop: "{{ nginx_domains }}"
+  loop_control:
+    label: "{{ item.name }} ({{ item.domain }})"
+  vars:
+    name: "{{ item.name }}"
+    domain: "{{ item.domain }}"
+
 - include_tasks: self_signed_certificates.yml
   when: development_mode
+  loop: "{{ nginx_domains }}"
+  loop_control:
+    label: "{{ item.name }} ({{ item.domain }})"
+  vars:
+    name: "{{ item.name }}"
+    domain: "{{ item.domain }}"

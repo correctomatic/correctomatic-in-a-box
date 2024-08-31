@@ -5,26 +5,14 @@
     state: present
     update_cache: yes
 
-- name: Configure Nginx for Docker registry (Development)
-  template:
-    src: nginx-docker-registry.conf-dev.j2
-    dest: /etc/nginx/sites-available/docker-registry
-  when: development_mode
-  notify: Reload Nginx
-
-- name: Configure Nginx for Docker registry (Production)
-  template:
-    src: nginx-docker-registry.conf-prod.j2
-    dest: /etc/nginx/sites-available/docker-registry
-  when: not development_mode
-  notify: Reload Nginx
-
-- name: Enable Nginx site configuration
-  file:
-    src: /etc/nginx/sites-available/docker-registry
-    dest: /etc/nginx/sites-enabled/docker-registry
-    state: link
-  notify: Reload Nginx
+- name: Loop through domains to configure Nginx
+  include_tasks: setup_site.yml
+  loop: "{{ nginx_domains }}"
+  loop_control:
+    label: "{{ item.name }} ({{ item.domain }})"
+  vars:
+    name: "{{ item.name }}"
+    domain: "{{ item.domain }}"
 
 - name: Remove default Nginx site
   file:

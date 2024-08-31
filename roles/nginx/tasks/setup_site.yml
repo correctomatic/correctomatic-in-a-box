@@ -1,0 +1,21 @@
+---
+- name: Configure Nginx for Docker registry (Development)
+  template:
+    src: "{{ name }}.conf-dev.j2"
+    dest: "/etc/nginx/sites-available/{{ name }}.conf"
+  when: development_mode
+  notify: Reload Nginx
+
+- name: Configure Nginx for Docker registry (Production)
+  template:
+    src: "{{ name }}.conf-prod.j2"
+    dest: "/etc/nginx/sites-available/{{ name }}.conf"
+  when: not development_mode
+  notify: Reload Nginx
+
+- name: Enable Nginx site configuration
+  file:
+    src: /etc/nginx/sites-available/{{ name }}.conf
+    dest: /etc/nginx/sites-enabled/{{ name }}.conf
+    state: link
+  notify: Reload Nginx

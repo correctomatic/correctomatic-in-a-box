@@ -49,6 +49,8 @@ correctomatic:
 
   app:
     domain: "app.correctomatic.org"
+    internal_port: 8000
+    max_upload_size: 10M
     db:
       name: "correctomatic"
       # Be sure that the locale is installed in the system, see roles/postgresql/tasks/main.yml

@@ -1,12 +1,12 @@
 ---
-- name: Configure Nginx for Docker registry (Development)
+- name: Configure Nginx for {{ name }} (Development)
   template:
     src: "{{ name }}.conf-dev.j2"
     dest: "/etc/nginx/sites-available/{{ name }}.conf"
   when: development_mode
   notify: Reload Nginx
 
-- name: Configure Nginx for Docker registry (Production)
+- name: Configure Nginx for {{ name }} (Production)
   template:
     src: "{{ name }}.conf-prod.j2"
     dest: "/etc/nginx/sites-available/{{ name }}.conf"

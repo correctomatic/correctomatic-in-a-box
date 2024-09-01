@@ -16,6 +16,27 @@
 # Certificates are configured in a different way if we
 # are running the playbook in dev mode: it will use certbot for production
 # and a self-signed certificate for development
+- block:
+  - name: Install Certbot
+    apt:
+      name: certbot
+      state: present
+      update_cache: yes
+
+  - name: Install Certbot Nginx plugin
+    apt:
+      name: python3-certbot-nginx
+      state: present
+
+  - name: Setup cron job for certbot renewals
+    cron:
+      name: "Renew Let's Encrypt certificates"
+      job: "/usr/bin/certbot renew --quiet --renew-hook '/bin/systemctl reload nginx'"
+      hour: 3
+      minute: 0
+
+  when: not development_mode
+
 - include_tasks: setup_certificates.yml
   when: not development_mode
   loop: "{{ nginx_domains }}"
@@ -25,6 +46,7 @@
     name: "{{ item.name }}"
     domain: "{{ item.domain }}"
 
+# In development mode, we use self-signed certificates
 - include_tasks: self_signed_certificates.yml
   when: development_mode
   loop: "{{ nginx_domains }}"

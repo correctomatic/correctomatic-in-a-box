@@ -1,16 +1,5 @@
 ---
-- name: Install Certbot
-  apt:
-    name: certbot
-    state: present
-    update_cache: yes
-
-- name: Install Certbot Nginx plugin
-  apt:
-    name: python3-certbot-nginx
-    state: present
-
-- name: Obtain SSL certificate from Let's Encrypt
+- name: Obtain SSL certificate from Let's Encrypt {{ domain }}
   command: >
     certbot --nginx --non-interactive --agree-tos --email {{ lets_encrypt_email }}
     -d {{ domain }}
@@ -18,10 +7,3 @@
     PATH: "{{ ansible_env.PATH }}"
   args:
     creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
-
-- name: Setup cron job for certbot renewals
-  cron:
-    name: "Renew Let's Encrypt certificates"
-    job: "/usr/bin/certbot renew --quiet --renew-hook '/bin/systemctl reload nginx'"
-    hour: 3
-    minute: 0

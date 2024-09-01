@@ -39,7 +39,8 @@ server {
         # These headers are required for Docker to trust the registry
         # certificate and enable client-side certificate validation
         proxy_ssl_verify on;
-        proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
+        # TO-DO: this must be added after certbot, because the file does not exist yet:
+        # proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
         proxy_ssl_session_reuse off;
     }
 }

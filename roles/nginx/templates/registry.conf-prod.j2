@@ -2,20 +2,8 @@ server {
     listen 80;
     server_name {{ registry.domain }};
 
-    location / {
-        return 301 https://$host$request_uri;
-    }
-}
-
-server {
-    listen 443 ssl;
-    server_name {{ registry.domain }};
-
-    ssl_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ registry.domain }}/privkey.pem;
-
     # Maximum file upload size
-    client_max_body_size 2G;
+    client_max_body_size {{ registry.max_upload_size }};
 
     # To add basic authentication to v2 use auth_basic setting.
     auth_basic "Correctomatic registry";
@@ -39,7 +27,7 @@ server {
         # These headers are required for Docker to trust the registry
         # certificate and enable client-side certificate validation
         proxy_ssl_verify on;
-        # TO-DO: this must be added after certbot, because the file does not exist yet:
+        # This must be added after certbot, because the file does not exist yet:
         # proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
         proxy_ssl_session_reuse off;
     }

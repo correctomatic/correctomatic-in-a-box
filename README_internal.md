@@ -237,7 +237,7 @@ Copy-paste for preparing the VPS:
 
 ```bash
 
-sh -o PreferredAuthentications=password  ubuntu@teapot.correctomatic.org
+ssh -o PreferredAuthentications=password  ubuntu@teapot.correctomatic.org
 sudo useradd -m -G adm,cdrom,sudo,dip,lxd -s /bin/bash -p $(openssl passwd -1) ansible
 sudo useradd -m -G adm,cdrom,sudo,dip,lxd -s /bin/bash -p $(openssl passwd -1) alvaro
 

@@ -4,7 +4,7 @@
     name: correctomatic-app
     image: correctomatic/app
     state: started
-    restart_policy: no
+    restart_policy: unless-stopped
     env:
       PORT: "{{ correctomatic.app.internal_port }}"
       POSTGRES_USER: "{{ app_db_user }}"
@@ -17,8 +17,8 @@
       UPLOAD_FOLDER: /uploads
       LTI_CONFIG_DIR: /lti_config
     volumes:
-      - /correctomatic/app/uploads:/uploads"
-      - /correctomatic/app/config:/lti_config"
+      - /correctomatic/app/uploads:/uploads:rw
+      - /correctomatic/app/config:/lti_config:rw
     ports:
       - "{{ correctomatic.app.internal_port }}:{{ correctomatic.app.internal_port }}"
     etc_hosts:

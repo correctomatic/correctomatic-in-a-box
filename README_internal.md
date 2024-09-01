@@ -231,3 +231,35 @@ https://medium.com/@haminhsang1903/private-docker-registry-with-https-and-a-ngin
 ## Inspection tools
 
 
+## Prepare VPS
+
+Copy-paste for preparing the VPS:
+
+```bash
+
+sh -o PreferredAuthentications=password  ubuntu@teapot.correctomatic.org
+sudo useradd -m -G adm,cdrom,sudo,dip,lxd -s /bin/bash -p $(openssl passwd -1) ansible
+sudo useradd -m -G adm,cdrom,sudo,dip,lxd -s /bin/bash -p $(openssl passwd -1) alvaro
+
+ssh-copy-id -o PreferredAuthentications=password -i ~/.ssh/id_teapot_alvaro.pub alvaro@teapot.correctomatic.org
+ssh-copy-id -o PreferredAuthentications=password -i ~/.ssh/id_teapot_ansible.pub ansible@teapot.correctomatic.org
+
+
+
+Host teapot_ansible
+	Hostname	teapot.correctomatic.org
+	User		ansible
+	PreferredAuthentications publickey
+	IdentityFile	~/.ssh/id_teapot_ansible
+	IdentitiesOnly	yes
+Host teapot
+	Hostname	teapot.correctomatic.org
+	User		alvaro
+	PreferredAuthentications publickey
+	IdentityFile	~/.ssh/id_teapot_alvaro
+	IdentitiesOnly	yes
+
+ssh teapot
+sudo userdel -r ubuntu
+
+```

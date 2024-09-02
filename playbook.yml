@@ -51,13 +51,13 @@
         enabled: yes
 
   roles:
-    - docker
-    - docker-registry
-    - nginx
-    - redis
-    - firewall
-    - api
-    - runner
-    - postgresql
-    - app
+    - { role: docker, tags: docker }
+    - { role: docker-registry, tags: docker-registry }
+    - { role: nginx, tags: nginx }
+    - { role: redis, tags: redis }
+    - { role: firewall, tags: firewall }
+    - { role: api, tags: api }
+    - { role: runner, tags: runner }
+    - { role: postgresql, tags: postgresql }
+    - { role: app, tags: app }
 

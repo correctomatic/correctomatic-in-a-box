@@ -46,18 +46,6 @@
     name: "{{ item.name }}"
     domain: "{{ item.domain }}"
 
-# We need to add this file after the certificate is obtained, so we can use it
-# If not, the nginx -t command will fail
-- name: Ensure proxy_ssl_trusted_certificate is set in Nginx config
-  when: not development_mode
-  ansible.builtin.lineinfile:
-    path: "/etc/nginx/sites-available/registry.conf"
-    line: 'proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;'
-    insertafter: '# This must be added after certbot, because the file does not exist yet:'
-    state: present
-  notify:
-    - Reload Nginx
-
 # In development mode, we use self-signed certificates
 - include_tasks: self_signed_certificates.yml
   when: development_mode

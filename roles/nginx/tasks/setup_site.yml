@@ -16,7 +16,7 @@
   when:
     - development_mode
     - not nginx_conf_dev.stat.exists
-  notify: Reload Nginx
+  notify: Restart Nginx
 
 - name: Check if Nginx config file for {{ name }} exists (Production)
   stat:
@@ -30,11 +30,11 @@
   when:
     - not development_mode
     - not nginx_conf_prod.stat.exists
-  notify: Reload Nginx
+  notify: Restart Nginx
 
 - name: Enable Nginx site configuration
   file:
     src: /etc/nginx/sites-available/{{ name }}.conf
     dest: /etc/nginx/sites-enabled/{{ name }}.conf
     state: link
-  notify: Reload Nginx
+  notify: Restart Nginx

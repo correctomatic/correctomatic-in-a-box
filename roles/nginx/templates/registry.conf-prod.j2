@@ -1,5 +1,4 @@
 server {
-    listen 80;
     server_name {{ registry.domain }};
 
     # Maximum file upload size
@@ -7,7 +6,7 @@ server {
 
     # To add basic authentication to v2 use auth_basic setting.
     auth_basic "Correctomatic registry";
-    auth_basic_user_file {{ htpasswd_file}};
+    auth_basic_user_file /etc/docker/htpasswd;
 
     location / {
         proxy_pass http://localhost:{{ registry.internal_port }};
@@ -27,8 +26,24 @@ server {
         # These headers are required for Docker to trust the registry
         # certificate and enable client-side certificate validation
         proxy_ssl_verify on;
-        # This must be added after certbot, because the file does not exist yet:
-        # proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
+        proxy_ssl_trusted_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem;
         proxy_ssl_session_reuse off;
     }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/{{ registry.domain }}/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/{{ registry.domain }}/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = {{ registry.domain }}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name {{ registry.domain }};
+    return 404; # managed by Certbot
 }

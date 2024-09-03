@@ -1,9 +1,35 @@
 ---
+- name: Check if port 80 is open
+  shell: "if ufw status | grep -q '80/tcp.*ALLOW'; then echo 'open'; else echo 'closed'; fi"
+  register: port_80_status
+  # ignore_errors: true
+
+- name: Stop Nginx, so certbot can use port 80
+  service:
+    name: nginx
+    state: stopped
+
+- name: Temporarily open port 80 for Let's Encrypt
+  ufw:
+    rule: allow
+    port: 80
+    proto: tcp
+    comment: "Temporarily open port 80 for Lets Encrypt"
+  when: port_80_status.stdout != "open"
+
 - name: Obtain SSL certificate from Let's Encrypt {{ domain }}
   command: >
-    certbot --nginx --non-interactive --agree-tos --email {{ lets_encrypt_email }}
+    certbot certonly --standalone --non-interactive --agree-tos --email {{ lets_encrypt_email }}
     -d {{ domain }}
   environment:
     PATH: "{{ ansible_env.PATH }}"
   args:
     creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+
+- name: Close port 80 if it was not originally open
+  ufw:
+    rule: deny
+    port: 80
+    proto: tcp
+  when: port_80_status.stdout == "open"
+  notify: Restart Nginx

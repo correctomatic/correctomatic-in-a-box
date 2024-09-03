@@ -23,10 +23,10 @@
       state: present
       update_cache: yes
 
-  - name: Install Certbot Nginx plugin
-    apt:
-      name: python3-certbot-nginx
-      state: present
+  # - name: Install Certbot Nginx plugin
+  #   apt:
+  #     name: python3-certbot-nginx
+  #     state: present
 
   - name: Setup cron job for certbot renewals
     cron:

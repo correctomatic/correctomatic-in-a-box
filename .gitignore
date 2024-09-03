@@ -1,5 +1,8 @@
 .vault_password
 
+fullchain.pem
+privkey.pem
+
 *.retry
 *.log
 

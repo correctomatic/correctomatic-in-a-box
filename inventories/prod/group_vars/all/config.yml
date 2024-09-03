@@ -7,6 +7,16 @@ server_timezone: "Europe/Madrid"
 # Change if you have a non-standard ssh port
 ssh_port: 22
 
+# In case you have the certificates, you can use them assigning the paths to the following variables
+# For production mode only. In development, it uses self-signed certificates
+nginx:
+  app.correctomatic.org:
+    cert_path: "./fullchain.pem"
+    key_path: "./privkey.pem"
+  registry.correctomatic.org:
+    cert_path: "./fullchain.pem"
+    key_path: "./privkey.pem"
+
 registry:
   domain: "registry.correctomatic.org"
   data_directory: "/var/registry"

@@ -1,35 +1,52 @@
 ---
-- name: Check if port 80 is open
-  shell: "if ufw status | grep -q '80/tcp.*ALLOW'; then echo 'open'; else echo 'closed'; fi"
-  register: port_80_status
-  # ignore_errors: true
+- name: Setting up certificates
+  debug:
+    msg: "***** Setting up certificates for {{ domain }} *****"
 
-- name: Stop Nginx, so certbot can use port 80
-  service:
-    name: nginx
-    state: stopped
+- name: Ensure certificate directory exists for {{ domain }}
+  file:
+    path: "/etc/letsencrypt/live/{{ domain }}"
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
 
-- name: Temporarily open port 80 for Let's Encrypt
-  ufw:
-    rule: allow
-    port: 80
-    proto: tcp
-    comment: "Temporarily open port 80 for Lets Encrypt"
-  when: port_80_status.stdout != "open"
+- name: Ensure domain-specific directory exists with 700 permissions
+  file:
+    path: "/etc/letsencrypt/live/{{ domain }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
 
-- name: Obtain SSL certificate from Let's Encrypt {{ domain }}
-  command: >
-    certbot certonly --standalone --non-interactive --agree-tos --email {{ lets_encrypt_email }}
-    -d {{ domain }}
-  environment:
-    PATH: "{{ ansible_env.PATH }}"
-  args:
-    creates: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+- name: Copy fullchain.pem to the target directory
+  copy:
+    src: "{{ nginx[domain].cert_path  }}"
+    dest: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+    owner: root
+    group: root
+    mode: '0644'
+  when: nginx[domain].cert_path is defined
 
-- name: Close port 80 if it was not originally open
-  ufw:
-    rule: deny
-    port: 80
-    proto: tcp
-  when: port_80_status.stdout == "open"
-  notify: Restart Nginx
+- name: Copy privkey.pem to the target directory
+  copy:
+    src: "{{ nginx[domain].key_path }}"
+    dest: "/etc/letsencrypt/live/{{ domain }}/privkey.pem"
+    owner: root
+    group: root
+    mode: '0600'
+  when: nginx[domain].key_path is defined
+
+- name: Check if the fullchain.pem file exists
+  stat:
+    path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+  register: fullchain_file
+
+- name: Check if the privkey.pem file exists
+  stat:
+    path: "/etc/letsencrypt/live/{{ domain }}/privkey.pem"
+  register: privkey_file
+
+- name: Include tasks to request certificates if they do not exist
+  include_tasks: request_certificates.yml
+  when: not (fullchain_file.stat.exists and privkey_file.stat.exists)

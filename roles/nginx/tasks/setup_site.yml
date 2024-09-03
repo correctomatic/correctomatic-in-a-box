@@ -2,34 +2,18 @@
 # We need to check if the Nginx configuration file exists before creating it
 # Because certbot modifies it, and will be rewritten if we launch the role again
 
-# TO-DO: check if we can use certbot starting with a file already referencing the certificates
-
-- name: Check if Nginx config file for {{ name }} exists (Development)
-  stat:
-    path: "/etc/nginx/sites-available/{{ name }}.conf"
-  register: nginx_conf_dev
-
 - name: Configure Nginx for {{ name }} (Development)
   template:
     src: "{{ name }}.conf-dev.j2"
     dest: "/etc/nginx/sites-available/{{ name }}.conf"
-  when:
-    - development_mode
-    - not nginx_conf_dev.stat.exists
+  when: development_mode
   notify: Restart Nginx
-
-- name: Check if Nginx config file for {{ name }} exists (Production)
-  stat:
-    path: "/etc/nginx/sites-available/{{ name }}.conf"
-  register: nginx_conf_prod
 
 - name: Configure Nginx for {{ name }} (Production)
   template:
     src: "{{ name }}.conf-prod.j2"
     dest: "/etc/nginx/sites-available/{{ name }}.conf"
-  when:
-    - not development_mode
-    - not nginx_conf_prod.stat.exists
+  when: not development_mode
   notify: Restart Nginx
 
 - name: Enable Nginx site configuration

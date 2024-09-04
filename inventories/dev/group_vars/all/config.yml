@@ -9,13 +9,14 @@ ssh_port: 22
 
 # In case you have the certificates, you can use them assigning the paths to the following variables
 # For production mode only. In development, it uses self-signed certificates
+# Paths are relative to nginx role, you can use {{ playbook_dir }} if you want to reference the playbook directory
 # nginx:
 #   dev.app.correctomatic.org:
-#     cert_path: "./fullchain.pem"
-#     key_path: "./privkey.pem"
+#     cert_path: "{{ playbook_dir }}/certs/app/fullchain.pem"
+#     key_path: "{{ playbook_dir }}/certs/app/privkey.pem"
 #   dev.registry.correctomatic.org:
-#     cert_path: "./fullchain.pem"
-#     key_path: "./privkey.pem"
+#     cert_path: "{{ playbook_dir }}/certs/registry/fullchain.pem"
+#     key_path: "{{ playbook_dir }}/certs/registry/privkey.pem"
 
 registry:
   domain: "dev.registry.correctomatic.org"

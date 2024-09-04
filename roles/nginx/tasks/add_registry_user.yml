@@ -1,0 +1,12 @@
+---
+- name: Verify user and password in htpasswd file ({{ username }})
+  shell: "htpasswd -vb {{ htpasswd_file }} {{ username }} '{{ password }}'"
+  register: user_password_check
+  failed_when: false
+  changed_when: user_password_check.rc != 0
+
+- name: Add user to htpasswd file
+  ansible.builtin.command:
+    cmd: htpasswd -bB "{{ htpasswd_file }}" "{{ username }}" "{{ password }}"
+  no_log: true
+  when: user_password_check.rc != 0

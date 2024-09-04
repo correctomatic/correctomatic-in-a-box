@@ -4,49 +4,16 @@
     name: apache2-utils
     state: present
 
-# MUST recreate the htpasswd file each time, because if not,
-# old users will be here
-# - name: Remove existing htpasswd file
-#   ansible.builtin.file:
-#     path: "{{ htpasswd_file }}"
-#     state: absent
-
-# - name: Ensure the htpasswd file exists
-#   ansible.builtin.file:
-#     path: "{{ htpasswd_file }}"
-#     state: touch
-#     group: www-data
-#     mode: '0640'
-
-# - name: Add users to htpasswd file
-#   ansible.builtin.command:
-#     cmd: htpasswd -bB "{{ htpasswd_file }}" "{{ item.username }}" "{{ item.password }}"
-#   loop: "{{ docker_registry_users }}"
-#   no_log: true
-
-- name: Check current htpasswd file state
-  ansible.builtin.stat:
+- name: Ensure the htpasswd file exists
+  ansible.builtin.file:
     path: "{{ htpasswd_file }}"
-  register: htpasswd_file_stat
+    state: touch
+    group: www-data
+    mode: '0640'
 
-- name: Read current htpasswd file
-  ansible.builtin.slurp:
-    path: "{{ htpasswd_file }}"
-  register: htpasswd_file_content
-  when: htpasswd_file_stat.stat.exists
-  
-- name: Add users to htpasswd file
-  ansible.builtin.command:
-    cmd: htpasswd -bB "{{ htpasswd_file }}" "{{ item.username }}" "{{ item.password }}"
+- name: Include registry users if not already present
+  include_tasks: add_registry_user.yml
+  vars:
+    username: "{{ item.username }}"
+    password: "{{ item.password }}"
   loop: "{{ docker_registry_users }}"
-  no_log: true
-  register: htpasswd_cmd_output
-  changed_when: >
-    htpasswd_file_content.content is not defined or
-    htpasswd_cmd_output.stdout.find(item.username) == -1
-  notify: Check for changes
-
-- name: Check for changes
-  debug:
-    msg: "Users were added/updated in htpasswd file."
-  when: htpasswd_cmd_output.changed

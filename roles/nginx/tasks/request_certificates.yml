@@ -20,7 +20,7 @@
 - name: Obtain SSL certificate from Let's Encrypt {{ domain }}
   command: >
     certbot certonly --standalone --non-interactive --agree-tos --email {{ lets_encrypt_email }}
-    -d {{ domain }} --staging
+    -d {{ domain }}
   environment:
     PATH: "{{ ansible_env.PATH }}"
   args:

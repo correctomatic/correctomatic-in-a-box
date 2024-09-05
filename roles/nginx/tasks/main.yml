@@ -38,7 +38,7 @@
 
   when: not development_mode
 
-- include_tasks: setup_certificates.yml
+- include_tasks: setup_certificate.yml
   when: not development_mode
   loop: "{{ nginx_domains }}"
   loop_control:
@@ -48,7 +48,7 @@
     domain: "{{ item.domain }}"
 
 # In development mode, we use self-signed certificates
-- include_tasks: self_signed_certificates.yml
+- include_tasks: self_signed_certificate.yml
   when: development_mode
   loop: "{{ nginx_domains }}"
   loop_control:

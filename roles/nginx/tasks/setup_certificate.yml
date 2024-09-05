@@ -1,7 +1,7 @@
 ---
-- name: Setting up certificates
+- name: Setting up certificate
   debug:
-    msg: "***** Setting up certificates for {{ domain }} *****"
+    msg: "***** Setting up certificate for {{ domain }} *****"
 
 - name: Ensure certificate directory exists for {{ domain }}
   file:

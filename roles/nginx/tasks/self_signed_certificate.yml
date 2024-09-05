@@ -1,5 +1,5 @@
 ---
-- name: Create directory for SSL certificates
+- name: Create directory for SSL certificate
   file:
     path: "/etc/letsencrypt/live/{{ domain }}"
     state: directory

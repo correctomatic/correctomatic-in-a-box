@@ -11,6 +11,8 @@
     owner: root
     group: root
 
+# TO-DO: Create live directory if it does not exist
+# TO-DO: Review permissions
 - name: Ensure domain-specific directory exists with 700 permissions
   file:
     path: "/etc/letsencrypt/live/{{ domain }}"

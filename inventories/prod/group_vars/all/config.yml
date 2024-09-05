@@ -12,11 +12,11 @@ ssh_port: 22
 # Paths are relative to nginx role, you can use {{ playbook_dir }} if you want to reference the playbook directory
 # nginx:
 #   app.correctomatic.org:
-#     cert_path: "{{ playbook_dir }}/certs/app/fullchain.pem"
-#     key_path: "{{ playbook_dir }}/certs/app/privkey.pem"
+#     cert_path: "{{ playbook_dir }}/certs/app/fullchain1.pem"
+#     key_path: "{{ playbook_dir }}/certs/app/privkey1.pem"
 #   registry.correctomatic.org:
-#     cert_path: "{{ playbook_dir }}/certs/registry/fullchain.pem"
-#     key_path: "{{ playbook_dir }}/certs/registry/privkey.pem"
+#     cert_path: "{{ playbook_dir }}/certs/registry/fullchain1.pem"
+#     key_path: "{{ playbook_dir }}/certs/registry/privkey1.pem"
 
 registry:
   domain: "registry.correctomatic.org"

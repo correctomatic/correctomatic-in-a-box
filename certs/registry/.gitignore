@@ -1,0 +1,3 @@
+# Put your production certificates here, to be copied to the letsencrypt certs directory
+# Remember to modify config.yml to uncomment the corresponding lines
+*.pem

@@ -1,10 +1,6 @@
 ## TO-DO
 
-- Configure the VPS to access its own registry
-- Runner containers
-- API container
-- APP container
-
+-
 
 ## Run playbook
 
@@ -12,6 +8,8 @@ ansible-playbook playbook.yml
 
 ansible-playbook -i a_different_hosts_file playbook.yml
 
+Run with colors and also store the output in a file:
+ANSIBLE_FORCE_COLOR=1 ansible-playbook playbook.yml -vvv | tee >(sed -r "s:\x1B\[[0-9;]*[mK]::g" > tmp/ansible.log)
 
 ## Redis insights
 

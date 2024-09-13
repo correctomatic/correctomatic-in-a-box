@@ -1,6 +1,53 @@
 ## TO-DO
 
--
+
+## Backup / Restore
+
+What to backup:
+- Registry: images and metadata
+- Databases
+- Uploads from app (not runner, they are temporary)
+
+Directories:
+correctomatic.app.uploads_dir
+registry.data_directory
+
+
+To backup DB:
+pg_dumpall -U {{ postgres_user }} > /path/to/backup/all_databases_backup.sql
+
+To backup directories:
+- Stop registry, and backup the directory
+- Stop app, and backup the directory
+
+
+- name: Restore directories on demand
+  hosts: your_server
+  tasks:
+
+    - name: Restore directories
+      copy:
+        src: /path/to/backup/
+        dest: /path/to/restore/
+      when: restore_on_demand | default(False)
+      tags: restore
+
+ansible-playbook your_playbook.yml --extra-vars "restore_on_demand=True"
+
+
+To Backup:
+
+- name: Restore all PostgreSQL databases
+  hosts: your_server
+  tasks:
+    - name: Restore all PostgreSQL databases using psql
+      command: "psql -U {{ postgres_user }} -f /path/to/backup/all_databases_backup.sql"
+      become: yes
+      become_user: postgres
+      tags: restore
+
+
+https://www.postgresql.org/docs/8.1/backup.html
 
 ## Run playbook
 

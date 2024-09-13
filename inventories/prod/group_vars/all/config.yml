@@ -60,6 +60,8 @@ correctomatic:
 
   app:
     domain: "app.correctomatic.org"
+    uploads_dir: "/correctomatic/app/uploads"
+    
     internal_port: 8000
     max_upload_size: 10M
     db:

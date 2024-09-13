@@ -17,7 +17,7 @@
 
 - name: Create the uploads directory
   file:
-    path: /correctomatic/app/uploads
+    path: "{{ correctomatic.app.uploads_dir }}"
     state: directory
     mode: '0755'
     owner: root

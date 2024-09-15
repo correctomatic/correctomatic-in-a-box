@@ -63,6 +63,10 @@ correctomatic:
     domain: "app.correctomatic.org"
     uploads_dir: "/correctomatic/app/uploads"
 
+    network:
+      name: app
+      subnet: "172.20.0.0/16"
+
     internal_port: 8000
     max_upload_size: 10M
     db:
@@ -78,6 +82,8 @@ correctomatic:
 # You can configure postgresql here, see roles/ansible-role-postgresql/defaults/main.yml for valid options
 postgresql:
   version: 16
+  # The app network will be added to the listen_addresses
+  # listen_addresses: "0.0.0.0"
 
 # correctomatic_app_domain: "correctomatic.org"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

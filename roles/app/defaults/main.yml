@@ -25,7 +25,7 @@ lti_config:
       deployment_ids: ["169"]
   "https://aules.edu.gva.es/ed":
     - default: true
-      client_id: "vUktVZGUdUE3k8O"
+      client_id: "YD56yxE8ywXKrjt"
       auth_login_url: "https://aules.edu.gva.es/ed/mod/lti/auth.php"
       auth_token_url: "https://aules.edu.gva.es/ed/mod/lti/token.php"
       auth_audience: null
@@ -33,4 +33,4 @@ lti_config:
       key_set: null
       private_key_file: "private.key"
       public_key_file: "public.key"
-      deployment_ids: ["2"]
+      deployment_ids: ["3"]

@@ -6,6 +6,7 @@
     state: present
     ipam_config:
       - subnet: "{{ correctomatic.app.network.subnet }}"
+        gateway: "{{ correctomatic.app.network.gateway }}"
 
 - name: Run correctomatic-app container
   docker_container:
@@ -34,4 +35,4 @@
       - "{{ correctomatic.app.internal_port }}:{{ correctomatic.app.internal_port }}"
     etc_hosts:
       host.docker.internal: host-gateway
-      postgres: host-gateway
+      postgres: "{{ correctomatic.app.network.gateway }}"

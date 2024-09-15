@@ -65,6 +65,7 @@ correctomatic:
       notification.host.two: 2.2.2.2
 
   app:
+    log_level: debug
     domain: "dev.app.correctomatic.org"
     uploads_dir: "/correctomatic/app/uploads"
 

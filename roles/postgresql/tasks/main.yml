@@ -1,7 +1,7 @@
 ---
 - name: Combine postgresql variables
   set_fact:
-    postgresql: "{{ (postgresql | default({})) | combine(postgresql_defaults, recursive=True) }}"
+    postgresql: "{{ postgresql_defaults | combine(postgresql | default({}), recursive=True) }}"
 
 - name: Install required utilities for becoming unprivileged user
   apt:

@@ -5,9 +5,11 @@
     port: "{{ item.port }}"
     proto: "{{ item.proto }}"
     comment: "{{ item.comment }}"
+    src: "{{ item.src | default(omit) }}"
   loop:
     - { port: "{{ ssh_port }}", proto: "tcp", comment: "SSH access" }
     - { port: 443, proto: "tcp", comment: "https for Docker registry and Correctomatic app" }
-    - { port: 5432, proto: "tcp", from_ip: "{{ correctomatic.app.network.subnet }}", comment: "PostgreSQL from Docker app network"  }
+    - { port: 5432, proto: "tcp", src: "{{ correctomatic.app.network.subnet }}", comment: "PostgreSQL from Docker app network"  }
+    - { port: 3000, proto: "tcp", src: "{{ correctomatic.app.network.subnet }}", comment: "Correctomatic API from Docker app network"  }
 
   notify: reload ufw

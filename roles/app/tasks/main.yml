@@ -17,7 +17,10 @@
   - name: Grant all privileges on the database to the user
     postgresql_query:
       db: "{{ correctomatic.app.db.name }}"
-      query: "GRANT ALL PRIVILEGES ON DATABASE {{ correctomatic.app.db.name }} TO {{ app_db_user }}"
+      query: |
+        GRANT ALL PRIVILEGES ON DATABASE {{ correctomatic.app.db.name }} TO {{ app_db_user }};
+        GRANT USAGE ON SCHEMA public TO {{ app_db_user }};
+        GRANT CREATE ON SCHEMA public TO {{ app_db_user }};
 
   # Note: the DB port is closed by default, so we need to open it in the firewall manually when needed
   - name: Allow remote connections for app user

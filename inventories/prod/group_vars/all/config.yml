@@ -84,7 +84,7 @@ correctomatic:
 postgresql:
   version: 16
   # The app network will be added to the listen_addresses
-  # listen_addresses: "0.0.0.0"
+  listen_addresses: "*" # this is for easy access while developing, comment when done. The port is closed by default anyway, open with ufw allow 5432/tcp and remove with ufw delete allow 5432/tcp
 
 # correctomatic_app_domain: "correctomatic.org"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

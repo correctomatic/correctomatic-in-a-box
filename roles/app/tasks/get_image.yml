@@ -30,6 +30,12 @@
   changed_when: false
   when: checksum_stat.stat.exists
 
+# Install buildx plugin?
+# DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+#             Install the buildx component to build images with BuildKit:
+#             https://docs.docker.com/go/buildx/
+# sudo apt install docker-buildx-plugin
+
 - block:
 
   - name: Show rebuild message

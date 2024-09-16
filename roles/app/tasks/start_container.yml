@@ -23,7 +23,7 @@
       POSTGRES_HOST: 'postgres'
       POSTGRES_PORT: '5432'
       POSTGRES_DB: "{{ correctomatic.app.db.name }}"
-      CORRECTOMATIC_API_SERVER: https://host.docker.internal:3000
+      CORRECTOMATIC_API_SERVER: http://host.docker.internal:3000
       CALLBACK_HOST: http://host.docker.internal:{{ correctomatic.app.internal_port }}
       UPLOAD_FOLDER: /uploads
       LTI_CONFIG_DIR: /lti_config

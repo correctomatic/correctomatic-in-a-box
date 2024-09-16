@@ -32,7 +32,10 @@ correctomatic:
   shared_folder: /correctomatic/exercises
 
   # Shared network for the containers
-  network: correctomatic
+  network:
+    name: runner
+    subnet: "172.18.0.0/16"
+    gateway: "172.18.0.1"
 
   docker_timeout: 10000
 

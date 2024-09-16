@@ -31,15 +31,16 @@ correctomatic:
   # Shared folder between the API and the correctomatic processes
   shared_folder: /correctomatic/exercises
 
-  # Shared network for the containers
-  network: correctomatic
-
   docker_timeout: 10000
 
   api:
     image: correctomatic/api
     tag: latest
     log_level: info
+    network:
+        name: runner
+        subnet: "172.18.0.0/16"
+        gateway: "172.18.0.1"
 
   runner:
     image: correctomatic/runner
@@ -48,6 +49,11 @@ correctomatic:
     delete_corrections_older_than: 3
     # Directory with the certs to be copied to the containers
     docker_certs_folder: /etc/docker
+    # Shared network for the runners
+    network:
+      name: runners
+      subnet: "172.20.0.0/16"
+      gateway: "172.20.0.1"
 
   starter:
     log_level: info
@@ -65,8 +71,8 @@ correctomatic:
 
     network:
       name: app
-      subnet: "172.20.0.0/16"
-      gateway: "172.20.0.1"
+      subnet: "172.22.0.0/16"
+      gateway: "172.22.0.1"
 
     internal_port: 8000
     max_upload_size: 10M

@@ -2,6 +2,14 @@
 - name: Include shared folder creation
   import_tasks: ../../common/tasks/shared_folder.yml
 
+- name: Create API's Docker network if not present
+  docker_network:
+    name: "{{ correctomatic.api.network.name }}"
+    state: present
+    ipam_config:
+      - subnet: "{{ correctomatic.api.network.subnet }}"
+        gateway: "{{ correctomatic.api.network.gateway }}"
+
 - name: Correctomatic API
   docker_container:
     name: correctomatic-api

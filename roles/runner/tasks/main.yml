@@ -7,8 +7,11 @@
 
 - name: Create correctomatic's Docker network if not present
   docker_network:
-    name: "{{ correctomatic.network }}"
+    name: "{{ correctomatic.runner.network.name }}"
     state: present
+    ipam_config:
+      - subnet: "{{ correctomatic.runner.network.subnet }}"
+        gateway: "{{ correctomatic.runner.network.gateway }}"
 
 # The docker's secrets are in a folder with restricted access
 - include_tasks: prepare_secrets.yml

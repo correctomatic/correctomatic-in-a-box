@@ -33,14 +33,16 @@ correctomatic:
 
   docker_timeout: 10000
 
+  # Shared network for the correctomatic processes
+  network:
+    name: correctomatic
+    subnet: "172.20.0.0/16"
+    gateway: "172.20.0.1"
+
   api:
     image: correctomatic/api
     tag: latest
     log_level: info
-    network:
-        name: runner
-        subnet: "172.18.0.0/16"
-        gateway: "172.18.0.1"
 
   runner:
     image: correctomatic/runner
@@ -49,11 +51,6 @@ correctomatic:
     delete_corrections_older_than: 3
     # Directory with the certs to be copied to the containers
     docker_certs_folder: /etc/docker
-    # Shared network for the runners
-    network:
-      name: runners
-      subnet: "172.20.0.0/16"
-      gateway: "172.20.0.1"
 
   starter:
     log_level: info
@@ -68,12 +65,6 @@ correctomatic:
     log_level: debug
     domain: "app.correctomatic.org"
     uploads_dir: "/correctomatic/app/uploads"
-
-    network:
-      name: app
-      subnet: "172.22.0.0/16"
-      gateway: "172.22.0.1"
-
     internal_port: 8000
     max_upload_size: 10M
     db:
@@ -92,5 +83,4 @@ postgresql:
   # The app network will be added to the listen_addresses
   listen_addresses: "*" # this is for easy access while developing, comment when done. The port is closed by default anyway, open with ufw allow 5432/tcp and remove with ufw delete allow 5432/tcp
 
-# correctomatic_app_domain: "correctomatic.org"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

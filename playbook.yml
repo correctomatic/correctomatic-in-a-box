@@ -54,7 +54,7 @@
     - { role: docker, tags: docker }
     - { role: docker-registry, tags: docker-registry }
     - { role: nginx, tags: nginx }
-    - { role: redis, tags: redis, redis_bind_address: "{{ correctomatic.runner.network.gateway }}" }
+    - { role: redis, tags: redis, redis_bind_address: "{{ correctomatic.network.gateway }}" }
     - { role: firewall, tags: firewall }
     - { role: api, tags: api }
     - { role: runner, tags: runner }

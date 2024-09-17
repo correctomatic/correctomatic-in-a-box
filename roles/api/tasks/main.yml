@@ -2,23 +2,18 @@
 - name: Include shared folder creation
   import_tasks: ../../common/tasks/shared_folder.yml
 
-- name: Create API's Docker network if not present
-  docker_network:
-    name: "{{ correctomatic.api.network.name }}"
-    state: present
-    ipam_config:
-      - subnet: "{{ correctomatic.api.network.subnet }}"
-        gateway: "{{ correctomatic.api.network.gateway }}"
+- name: Include correctomatic network creation
+  import_tasks: ../../common/tasks/correctomatic_network.yml
 
-- name: Correctomatic API
+- name: Correctomatic API container
   docker_container:
     name: correctomatic-api
     image: "{{ correctomatic.api.image }}:{{ correctomatic.api.tag }}"
     state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ correctomatic.network.name }}"
     pull: yes
-    volumes:
-      # Exercises' folder
-      - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
     env:
       PORT: "3000"
       REDIS_HOST: redis
@@ -27,10 +22,12 @@
       REDIS_PASSWORD: "{{ redis_password }}"
       LOG_LEVEL: "{{ correctomatic.api.log_level }}"
       UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
-
+    volumes:
+      # Exercises' folder
+      - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
     published_ports:
       - "3000:3000"
     # Redis is running on the VPS
     etc_hosts:
       redis: host-gateway
-    restart_policy: unless-stopped
+

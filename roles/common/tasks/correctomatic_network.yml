@@ -1,0 +1,8 @@
+---
+- name: Create Correctomatic network
+  docker_network:
+    name: "{{ correctomatic.network.name }}"
+    state: present
+    ipam_config:
+      - subnet: "{{ correctomatic.network.subnet }}"
+        gateway: "{{ correctomatic.network.gateway }}"

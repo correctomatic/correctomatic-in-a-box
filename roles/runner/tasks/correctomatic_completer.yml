@@ -5,7 +5,10 @@
     name: correctomatic-completer
     image: "{{ correctomatic.runner.image }}:{{ correctomatic.runner.tag }}"
     state: started
+    restart_policy: unless-stopped
     pull: yes
+    networks:
+      - name: "{{ correctomatic.network.name }}"
     volumes:
       # Exercises' folder
       - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
@@ -26,6 +29,5 @@
       DOCKER_TIMEOUT: "{{ correctomatic.docker_timeout }}"
       DOCKER_OPTIONS_FILE: "/run/docker_options.json"
     etc_hosts: "{{ etc_hosts_correctomatic }}"
-    restart_policy: unless-stopped
 
 

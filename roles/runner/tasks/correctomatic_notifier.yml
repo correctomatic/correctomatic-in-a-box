@@ -5,7 +5,10 @@
     name: correctomatic-notifier
     image: "{{ correctomatic.runner.image }}:{{ correctomatic.runner.tag }}"
     state: started
+    restart_policy: unless-stopped
     pull: yes
+    networks:
+      - name: "{{ correctomatic.network.name }}"
     env:
       PROCESS: notifier
       REDIS_HOST: redis
@@ -15,4 +18,3 @@
       LOG_LEVEL: "{{ correctomatic.notifier.log_level }}"
     # Should I add some host entries for development?
     etc_hosts: "{{ etc_hosts_correctomatic }}"
-    restart_policy: unless-stopped

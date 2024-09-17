@@ -1,4 +1,4 @@
-listen_addresses = '{{ postgresql.listen_addresses }},{{ correctomatic.app.network.gateway }}'		# what IP address(es) to listen on;
+listen_addresses = '{{ postgresql.listen_addresses }},{{ correctomatic.network.gateway }}'		# what IP address(es) to listen on;
 port = {{ postgresql.port }}				# (change requires restart)
 max_connections = {{ postgresql.max_connections }}			# (change requires restart)
 log_timezone = 'Europe/Madrid'

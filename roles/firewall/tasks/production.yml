@@ -9,9 +9,8 @@
   loop:
     - { port: "{{ ssh_port }}", proto: "tcp", comment: "SSH access" }
     - { port: 443, proto: "tcp", comment: "https for Docker registry and Correctomatic app" }
-    - { port: 5432, proto: "tcp", src: "{{ correctomatic.app.network.subnet }}", comment: "PostgreSQL from Docker app network"  }
-    - { port: 3000, proto: "tcp", src: "{{ correctomatic.app.network.subnet }}", comment: "Correctomatic API from Docker app network"  }
-    - { port: 6379, proto: "tcp", src: "{{ correctomatic.api.network.subnet }}", comment: "Redis from API network"  }
-    - { port: 6379, proto: "tcp", src: "{{ correctomatic.runner.network.subnet }}", comment: "Redis from runner network"  }
+    - { port: 5432, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "PostgreSQL from correctomatic network"  }
+    - { port: 3000, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Correctomatic API from correctomatic network"  }
+    - { port: 6379, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Redis from correctomatic network"  }
 
   notify: reload ufw

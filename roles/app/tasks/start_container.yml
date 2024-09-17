@@ -1,21 +1,16 @@
 ---
 
-- name: Create the network for the app container
-  docker_network:
-    name: "{{ correctomatic.app.network.name }}"
-    state: present
-    ipam_config:
-      - subnet: "{{ correctomatic.app.network.subnet }}"
-        gateway: "{{ correctomatic.app.network.gateway }}"
+- name: Include correctomatic network creation
+  import_tasks: ../../common/tasks/correctomatic_network.yml
 
-- name: Run correctomatic-app container
+- name: Correctomatic App container
   docker_container:
     name: correctomatic-app
     image: correctomatic/app
     state: started
     restart_policy: unless-stopped
     networks:
-      - name: "{{ correctomatic.app.network.name }}"
+      - name: "{{ correctomatic.network.name }}"
     env:
       PORT: "{{ correctomatic.app.internal_port }}"
       POSTGRES_USER: "{{ app_db_user }}"
@@ -35,4 +30,4 @@
       - "{{ correctomatic.app.internal_port }}:{{ correctomatic.app.internal_port }}"
     etc_hosts:
       host.docker.internal: host-gateway
-      postgres: "{{ correctomatic.app.network.gateway }}"
+      postgres: "{{ correctomatic.network.gateway }}"

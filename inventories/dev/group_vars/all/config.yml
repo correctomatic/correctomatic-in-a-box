@@ -31,13 +31,13 @@ correctomatic:
   # Shared folder between the API and the correctomatic processes
   shared_folder: /correctomatic/exercises
 
-  # Shared network for the containers
-  network:
-    name: runner
-    subnet: "172.18.0.0/16"
-    gateway: "172.18.0.1"
-
   docker_timeout: 10000
+
+  # Shared network for the correctomatic processes
+  network:
+    name: correctomatic
+    subnet: "172.20.0.0/16"
+    gateway: "172.20.0.1"
 
   api:
     image: correctomatic/api
@@ -71,12 +71,6 @@ correctomatic:
     log_level: debug
     domain: "dev.app.correctomatic.org"
     uploads_dir: "/correctomatic/app/uploads"
-
-    network:
-      name: app
-      subnet: "172.20.0.0/16"
-      gateway: "172.20.0.1"
-
     internal_port: 8000
     max_upload_size: 10M
     db:
@@ -95,5 +89,4 @@ postgresql:
   # The app network will be added to the listen_addresses
   # listen_addresses: "172.18.0.0/16"
 
-# correctomatic_app_domain: "correctomatic.alvaromaceda.es"
 lets_encrypt_email: "alvaro@alvaromaceda.es"

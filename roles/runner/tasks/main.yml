@@ -22,7 +22,7 @@
     etc_hosts_correctomatic: >
       {{
         {
-          (docker.domain): 'host-gateway',
+          (docker.domain): '{{ correctomatic.network.gateway }}',
           'redis': '{{ correctomatic.network.gateway }}'
         }
       }}

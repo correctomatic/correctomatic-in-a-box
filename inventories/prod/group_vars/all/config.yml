@@ -42,7 +42,7 @@ correctomatic:
   api:
     image: correctomatic/api
     tag: latest
-    log_level: info
+    log_level: debug
 
   runner:
     image: correctomatic/runner
@@ -53,13 +53,13 @@ correctomatic:
     docker_certs_folder: /etc/docker
 
   starter:
-    log_level: info
+    log_level: debug
 
   completer:
-    log_level: info
+    log_level: debug
 
   notifier:
-    log_level: info
+    log_level: debug
 
   app:
     log_level: debug

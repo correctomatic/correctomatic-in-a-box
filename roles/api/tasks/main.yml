@@ -29,5 +29,5 @@
       - "3000:3000"
     # Redis is running on the VPS
     etc_hosts:
-      redis: host-gateway
+      redis: "{{ correctomatic.network.gateway }}"
 

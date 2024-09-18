@@ -50,5 +50,5 @@
   register: privkey_file
 
 - name: Include tasks to request certificates if they do not exist
-  include_tasks: request_certificates.yml
+  include_tasks: request_certificate.yml
   when: not (fullchain_file.stat.exists and privkey_file.stat.exists)

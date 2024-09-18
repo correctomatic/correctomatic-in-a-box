@@ -28,10 +28,16 @@
       path: "/etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf"
       insertafter: "^#.*TYPE.*DATABASE.*USER.*ADDRESS.*METHOD"
       line: "host    {{ correctomatic.app.db.name }}             {{ app_db_user }}    0.0.0.0/0    scram-sha-256"
-    notify: Restart PostgreSQL
 
   become: true
   become_user: postgres
+
+# We need to reload postgres here because the app container needs to be able to connect to the database
+# to run the migrations
+- name: Restart PostgreSQL
+  systemd:
+    name: postgresql
+    state: reloaded
 
 # --------------------------------------------------------------------------------------------------------
 # This is a temporary way of deploying the app, because the app is in early stages of development

@@ -1,6 +1,9 @@
 ## TO-DO
 
 
+- Connection from App to the API
+- Callback to the App from the API?
+
 ## Backup / Restore
 
 What to backup:

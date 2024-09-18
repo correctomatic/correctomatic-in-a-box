@@ -52,7 +52,7 @@
 
   roles:
     - { role: docker, tags: docker }
-    - { role: docker-registry, tags: docker-registry }
+    - { role: docker-registry, tags: registry }
     - { role: nginx, tags: nginx }
     # Temporary for debugging in production
     #- { role: redis, tags: redis, redis_bind_address: "{{ correctomatic.network.gateway }}" }

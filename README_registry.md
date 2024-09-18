@@ -37,6 +37,12 @@ docker image tag $IMAGE $DOCKER_REGISTRY/$IMAGE
 docker image push $DOCKER_REGISTRY/$IMAGE
 ```
 
+
+You will need to log in to the registry to push images. You can do this with the following command:
+```sh
+docker login $DOCKER_REGISTRY
+```
+
 ## Registry frontend
 
 The easiest way to interact with the registry is using a frontend. You can use the `docker-compose.yml` files in the `utils/registry_frontend` directory to run a frontend in the VPS. Launch it with:

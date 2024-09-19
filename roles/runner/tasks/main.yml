@@ -23,7 +23,8 @@
       {{
         {
           (docker.domain): '{{ correctomatic.network.gateway }}',
-          'redis': '{{ correctomatic.network.gateway }}'
+          'redis': '{{ correctomatic.network.gateway }}',
+          'host.docker.internal': '{{ correctomatic.network.gateway }}',
         }
       }}
 

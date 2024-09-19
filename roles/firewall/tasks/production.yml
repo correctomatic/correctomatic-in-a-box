@@ -15,7 +15,7 @@
     - { port: "{{ correctomatic.api.port }}", proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Correctomatic API from correctomatic network"  }
     - { port: "{{ correctomatic.app.internal_port }}", proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Correctomatic APP from correctomatic network"  }
     # Temporary for testing
-    - { port: 6379, proto: "tcp", comment: "Access redis from the outside" }
-    - { port: 5432, proto: "tcp", comment: "Access PostgreSQL from the outside" }
+    - { port: 6379, proto: "tcp", comment: "***WARNING, REMOVE IN PRODUCTION *** Access redis from the outside" }
+    - { port: 5432, proto: "tcp", comment: "***WARNING, REMOVE IN PRODUCTION *** Access PostgreSQL from the outside" }
 
   notify: reload ufw

@@ -62,4 +62,5 @@
     - { role: runner, tags: runner }
     - { role: postgresql, tags: postgresql }
     - { role: app, tags: app }
+    - { role: pino-pretty, tags: pino-pretty }
 

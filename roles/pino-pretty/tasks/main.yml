@@ -1,0 +1,29 @@
+---
+- name: Create subdirectory in /tmp
+  ansible.builtin.file:
+    path: /tmp/pino-pretty
+    state: directory
+    mode: '0755'
+
+- name: Copy Dockerfile to /tmp/pino-pretty
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /tmp/pino-pretty/Dockerfile
+
+- name: Build pino-pretty Docker image
+  docker_image:
+    name: pino-pretty
+    build:
+      path: /tmp/pino-pretty
+    source: build
+    state: present
+
+- name: Run pino-pretty container
+  docker_container:
+    name: pretty
+    image: pino-pretty
+    state: started
+    detach: true
+    restart_policy: unless-stopped
+    # remove: true
+    command: ["sleep", "infinity"]

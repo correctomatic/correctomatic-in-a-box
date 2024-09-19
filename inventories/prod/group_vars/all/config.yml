@@ -43,6 +43,7 @@ correctomatic:
     image: correctomatic/api
     tag: latest
     log_level: debug
+    port: 3000
 
   runner:
     image: correctomatic/runner

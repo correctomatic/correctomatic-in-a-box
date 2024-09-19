@@ -10,8 +10,10 @@
     - { port: "{{ ssh_port }}", proto: "tcp", comment: "SSH access" }
     - { port: 443, proto: "tcp", comment: "https for Docker registry and Correctomatic app" }
     - { port: 5432, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "PostgreSQL from correctomatic network"  }
-    - { port: 3000, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Correctomatic API from correctomatic network"  }
     - { port: 6379, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Redis from correctomatic network"  }
+    - { port: 2376, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Docker from correctomatic network"  }
+    - { port: "{{ correctomatic.api.port }}", proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Correctomatic API from correctomatic network"  }
+    - { port: "{{ correctomatic.app.internal_port }}", proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Correctomatic APP from correctomatic network"  }
     # Temporary for testing
     - { port: 6379, proto: "tcp", comment: "Access redis from the outside" }
     - { port: 5432, proto: "tcp", comment: "Access PostgreSQL from the outside" }

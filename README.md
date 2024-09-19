@@ -198,7 +198,7 @@ const cert = fs.readFileSync(certPath);
 const key = fs.readFileSync(keyPath);
 
 const docker = new Docker({
-  host: 'docker.correctomatic.alvaromaceda.es',
+  host: 'dev.docker.correctomatic.org',
   port: 2376,
   ca,
   cert,

@@ -50,13 +50,6 @@
     #   REGISTRY_LOG_LEVEL: debug
     #   REGISTRY_LOG_FORMATTER: json # Options are text, json, and logstash
 
-# Needed ?
-- name: Log in to the private Docker registry
-  docker_login:
-    registry_url: "{{ registry.domain }}"
-    username: "{{ correctomatic_registry_user }}"
-    password: "{{ correctomatic_registry_password }}"
-
 - name: Add entry to /etc/hosts file
   lineinfile:
     path: /etc/hosts

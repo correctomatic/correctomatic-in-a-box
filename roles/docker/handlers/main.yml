@@ -1,5 +1,10 @@
 ---
 - name: Restart Docker
-  service:
-    name: docker
-    state: restarted
+  block:
+    - name: Reload systemd daemon
+      command: systemctl daemon-reload
+
+    - name: Restart Docker
+      service:
+        name: docker
+        state: restarted

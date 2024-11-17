@@ -58,9 +58,10 @@
     #- { role: redis, tags: redis, redis_bind_address: "{{ correctomatic.network.gateway }}" }
     - { role: redis, tags: redis, redis_bind_address: "0.0.0.0" }
     - { role: firewall, tags: firewall }
-    - { role: api, tags: api }
-    - { role: runner, tags: runner }
     - { role: postgresql, tags: postgresql }
+    - { role: postgresql, tags: postgresql-setup }
+    - { role: runner, tags: runner }
+    - { role: api, tags: api }
     - { role: app, tags: app }
     - { role: pino-pretty, tags: pino-pretty }
 

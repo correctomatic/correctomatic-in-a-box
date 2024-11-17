@@ -13,11 +13,11 @@
       - name: "{{ correctomatic.network.name }}"
     env:
       PORT: "{{ correctomatic.app.internal_port }}"
+      POSTGRES_DB: "{{ correctomatic.app.db.name }}"
       POSTGRES_USER: "{{ app_db_user }}"
       POSTGRES_PASSWORD: "{{ app_db_password }}"
       POSTGRES_HOST: 'postgres'
       POSTGRES_PORT: '5432'
-      POSTGRES_DB: "{{ correctomatic.app.db.name }}"
       CORRECTOMATIC_API_SERVER: "http://host.docker.internal:{{ correctomatic.api.port }}"
       CALLBACK_HOST: http://host.docker.internal:{{ correctomatic.app.internal_port }}
       UPLOAD_FOLDER: /uploads

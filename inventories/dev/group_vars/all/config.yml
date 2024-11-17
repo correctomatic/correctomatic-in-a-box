@@ -44,6 +44,12 @@ correctomatic:
     tag: latest
     log_level: debug
     port: 3000
+    db:
+      name: "correctomatic"
+      # Be sure that the locale is installed in the system, see roles/postgresql/tasks/main.yml
+      encoding: "UTF8"
+      lc_collate: "es_ES.UTF-8"
+      lc_ctype: "es_ES.UTF-8"
 
   runner:
     image: correctomatic/runner

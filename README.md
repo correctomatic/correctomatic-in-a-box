@@ -39,6 +39,11 @@ Run the playbook in production mode:
 ```sh
 ansible-playbook playbook.yml -i inventories/prod/hosts --ask-vault-pass
 ```
+If you want to run only a specific tag, you can use the `--tags` option. For example, to run only the `nginx` and `docker` roles:
+
+```sh
+ansible-playbook playbook.yml --tags docker,nginx
+```
 
 
 ## Working with the private registry

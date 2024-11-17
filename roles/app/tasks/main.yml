@@ -1,43 +1,43 @@
 ---
-- block:
-  - name: Ensure database for Correctomatic App is present
-    postgresql_db:
-      name: "{{ correctomatic.app.db.name }}"
-      encoding: "{{ correctomatic.app.db.encoding }}"
-      lc_collate: "{{ correctomatic.app.db.lc_collate }}"
-      lc_ctype: "{{ correctomatic.app.db.lc_ctype }}"
-      template: template0
+# - block:
+#   - name: Ensure database for Correctomatic App is present
+#     postgresql_db:
+#       name: "{{ correctomatic.app.db.name }}"
+#       encoding: "{{ correctomatic.app.db.encoding }}"
+#       lc_collate: "{{ correctomatic.app.db.lc_collate }}"
+#       lc_ctype: "{{ correctomatic.app.db.lc_ctype }}"
+#       template: template0
 
-  - name: Ensure PostgreSQL role exists
-    postgresql_user:
-      name: "{{ app_db_user }}"
-      password: "{{ app_db_password }}"
-      state: present
+#   - name: Ensure PostgreSQL role exists
+#     postgresql_user:
+#       name: "{{ app_db_user }}"
+#       password: "{{ app_db_password }}"
+#       state: present
 
-  - name: Grant all privileges on the database to the user
-    postgresql_query:
-      db: "{{ correctomatic.app.db.name }}"
-      query: |
-        GRANT ALL PRIVILEGES ON DATABASE {{ correctomatic.app.db.name }} TO {{ app_db_user }};
-        GRANT USAGE ON SCHEMA public TO {{ app_db_user }};
-        GRANT CREATE ON SCHEMA public TO {{ app_db_user }};
+#   - name: Grant all privileges on the database to the user
+#     postgresql_query:
+#       db: "{{ correctomatic.app.db.name }}"
+#       query: |
+#         GRANT ALL PRIVILEGES ON DATABASE {{ correctomatic.app.db.name }} TO {{ app_db_user }};
+#         GRANT USAGE ON SCHEMA public TO {{ app_db_user }};
+#         GRANT CREATE ON SCHEMA public TO {{ app_db_user }};
 
-  # Note: the DB port is closed by default, so we need to open it in the firewall manually when needed
-  - name: Allow remote connections for app user
-    lineinfile:
-      path: "/etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf"
-      insertafter: "^#.*TYPE.*DATABASE.*USER.*ADDRESS.*METHOD"
-      line: "host    {{ correctomatic.app.db.name }}             {{ app_db_user }}    0.0.0.0/0    scram-sha-256"
+#   # Note: the DB port is closed by default, so we need to open it in the firewall manually when needed
+#   - name: Allow remote connections for app user
+#     lineinfile:
+#       path: "/etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf"
+#       insertafter: "^#.*TYPE.*DATABASE.*USER.*ADDRESS.*METHOD"
+#       line: "host    {{ correctomatic.app.db.name }}             {{ app_db_user }}    0.0.0.0/0    scram-sha-256"
 
-  become: true
-  become_user: postgres
+#   become: true
+#   become_user: postgres
 
-# We need to reload postgres here because the app container needs to be able to connect to the database
-# to run the migrations
-- name: Restart PostgreSQL
-  systemd:
-    name: postgresql
-    state: reloaded
+# # We need to reload postgres here because the app container needs to be able to connect to the database
+# # to run the migrations
+# - name: Restart PostgreSQL
+#   systemd:
+#     name: postgresql
+#     state: reloaded
 
 # --------------------------------------------------------------------------------------------------------
 # This is a temporary way of deploying the app, because the app is in early stages of development

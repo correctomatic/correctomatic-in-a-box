@@ -5,6 +5,18 @@
 - name: Include correctomatic network creation
   import_tasks: ../../common/tasks/correctomatic_network.yml
 
+- name: Setup API's database
+  include_role:
+    name: postgresql-setup
+  vars:
+    db_name: "{{ correctomatic.api.db.name }}"
+    db_user: "{{ api.db_user }}"
+    db_password: "{{ api.db_password }}"
+    encoding: "{{ correctomatic.api.db.encoding }}"
+    lc_collate: "{{ correctomatic.api.db.lc_collate }}"
+    lc_ctype: "{{ correctomatic.api.db.lc_ctype }}"
+    postgresql_version: "{{ postgresql.version }}"
+
 - name: Correctomatic API container
   docker_container:
     name: correctomatic-api
@@ -16,6 +28,11 @@
     pull: yes
     env:
       PORT: "3000"
+      DB_NAME: "{{ correctomatic.api.db.name }}"
+      DB_USER: "{{ api.db_user }}"
+      DB_PASSWORD: "{{ api.db_password }}"
+      DB_HOST: postgres
+      DB_PORT: "5432"
       REDIS_HOST: redis
       REDIS_PORT: "6379"
       REDIS_USER: default
@@ -30,4 +47,18 @@
     # Redis is running on the VPS
     etc_hosts:
       redis: "{{ correctomatic.network.gateway }}"
+      postgres: "{{ correctomatic.network.gateway }}"
 
+- name: Run Sequelize migrations
+  command: |
+    docker exec correctomatic-api yarn migrate
+  register: migration_result
+
+- name: Output migration result
+  debug:
+    var: migration_result.stdout
+
+- name: Create first root user
+  command: |
+    docker exec -e ROOT_USER="{{ }}" ROOT_PASSWORD="{{ }}" correctomatic-api yarn create-root-user
+  register: root_user_result

@@ -69,7 +69,7 @@ correctomatic:
     internal_port: 8000
     max_upload_size: 10M
     db:
-      name: "correctomatic"
+      name: "correctomatic_app"
       # Be sure that the locale is installed in the system, see roles/postgresql/tasks/main.yml
       encoding: "UTF8"
       lc_collate: "es_ES.UTF-8"

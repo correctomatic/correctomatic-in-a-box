@@ -7,7 +7,7 @@
 
 - name: Setup API's database
   include_role:
-    name: postgresql-setup
+    name: postgresql-database-setup
   vars:
     db_name: "{{ correctomatic.api.db.name }}"
     db_user: "{{ api.db_user }}"

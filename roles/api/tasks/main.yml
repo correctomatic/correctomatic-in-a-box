@@ -37,6 +37,7 @@
       REDIS_PORT: "6379"
       REDIS_USER: default
       REDIS_PASSWORD: "{{ redis_password }}"
+      JWT_SECRET_KEY: "{{ api.jwt_secret_key }}"
       LOG_LEVEL: "{{ correctomatic.api.log_level }}"
       UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
     volumes:
@@ -60,5 +61,5 @@
 
 - name: Create first root user
   command: |
-    docker exec -e ROOT_USER="{{ }}" ROOT_PASSWORD="{{ }}" correctomatic-api yarn create-root-user
+    docker exec -e ROOT_USER="{{ api.root_user }}" -e ROOT_PASSWORD="{{ api.root_password }}" correctomatic-api yarn create-root-user
   register: root_user_result

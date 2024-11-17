@@ -174,6 +174,14 @@ docker image pull alpine:latext
 
 To switch back to the local context run `docker context use default`.
 
+#### Pretty logs
+
+There is a container, `pretty`, that can be used to format the logs of the correctomatic processes. You can use it like this:
+
+```sh
+docker logs --follow correctomatic-app | docker exec -i pretty pino-pretty
+```
+
 #### Test the connection using Dockerode
 
 The Correctomatic uses Dockerode to interact with the Docker daemon. Here you have

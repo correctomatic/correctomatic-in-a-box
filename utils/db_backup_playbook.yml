@@ -1,0 +1,71 @@
+---
+- name: Backup PostgreSQL database to local machine
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    backup_dir_remote: /tmp/db_backups
+    backup_dir_local: "{{ playbook_dir }}/../backups"
+    backup_file: "{{ db_name }}_{{ timestamp }}.sql.gz"
+
+  pre_tasks:
+    - name: Set fixed timestamp for the playbook run
+      set_fact:
+        timestamp: "{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+      tags: always
+
+  tasks:
+
+    - name: Debug variables
+      debug:
+        var: app
+      tags: always
+
+    - name: Add App database to the list of databases
+      set_fact:
+        db_list: "{{ db_list | default([]) + [correctomatic.app.db.name] }}"
+      tags: app
+
+    - name: Add API database to the list of databases
+      set_fact:
+        db_list: "{{ db_list | default([]) + [correctomatic.api.db.name] }}"
+      tags: api
+
+    - name: Backup each database
+      tags: always
+      block:
+        - name: Ensure remote backup directory exists
+          file:
+            path: "{{ backup_dir_remote }}"
+            state: directory
+            owner: postgres
+            group: postgres
+            mode: '0700'
+            
+        - name: "Back up the database {{ item }}"
+          postgresql_db:
+            state: dump
+            name: "{{ item }}"
+            target: "{{ backup_dir_remote }}/{{ timestamp }}_{{ item }}.dump.sql.gz"
+          become: yes
+          become_user: postgres
+          loop: "{{ db_list }}"
+          loop_control:
+            label: "{{ item }}"
+
+        - name: Download the backup file to local machine
+          fetch:
+            src: "{{ backup_dir_remote }}/{{ timestamp }}_{{ item }}.dump.sql.gz"
+            dest: "{{ backup_dir_local }}/"
+            flat: yes
+          loop: "{{ db_list }}"
+          loop_control:
+            label: "{{ item }}"
+
+        - name: Remove remote backup file
+          file:
+            path: "{{ backup_dir_remote }}/{{ timestamp }}_{{ item }}.dump.sql.gz"
+            state: absent
+          loop: "{{ db_list }}"
+          loop_control:
+            label: "{{ item }}"

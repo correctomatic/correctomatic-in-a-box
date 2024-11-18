@@ -1,0 +1,36 @@
+---
+- name: Load scripts into PostgreSQL databases
+  hosts: all
+  become: true
+  become_method: sudo
+  gather_facts: false
+
+
+  tasks:
+
+    - name: Fail if no role is specified
+      debug:
+        msg: "No role specified. Use '--tags' to specify the role for the load."
+      failed_when: "'load_script_role' not in ansible_run_tags"
+
+    - name: Role to load script into API Database
+      tags: load_database_a
+      tasks:
+        - name: Load script into Database A
+          ansible.builtin.shell: |
+            PGPASSWORD="{{ db_password }}" psql -U {{ db_user }} -h localhost -d database_a -f /path/to/script_a.sql
+          register: result
+        - name: Debug output
+          debug:
+            var: result.stdout
+
+    - name: Role to load script App Database
+      tags: load_database_b
+      tasks:
+        - name: Load script into Database B
+          ansible.builtin.shell: |
+            PGPASSWORD="{{ db_password }}" psql -U {{ db_user }} -h localhost -d database_b -f /path/to/script_b.sql
+          register: result
+        - name: Debug output
+          debug:
+          var: result.stdout

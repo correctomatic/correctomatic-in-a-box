@@ -45,10 +45,23 @@ If you want to run only a specific tag, you can use the `--tags` option. For exa
 ansible-playbook playbook.yml --tags docker,nginx
 ```
 
-
 ## Working with the private registry
 
 The correctomatic works with a private registry (usually, the correction images are kept private) There is another file with [documentation on the private registry](README_registry.md)
+
+## Dumping and restoring the databases
+
+There are two databases, one for the API and one for the App. There is a playbook to dump them; the dumps are downloaded to `./backups` folder.
+You can run the playbook with tags if you want to dump only one of the databases. Omit the tags to dump both databases:
+```sh
+ansible-playbook utils/db_backup_playbook.yml --tags api,app
+```
+
+**TO-DO: restore the databases**
+```sh
+ansible-playbook utils/db_restore_playbook.yml
+```
+
 
 ## Development
 

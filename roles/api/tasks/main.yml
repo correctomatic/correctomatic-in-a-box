@@ -38,6 +38,7 @@
       REDIS_USER: default
       REDIS_PASSWORD: "{{ redis_password }}"
       JWT_SECRET_KEY: "{{ api.jwt_secret_key }}"
+      JWT_EXPIRES_IN: "{{ correctomatic.api.jwt_expires_in }}"
       LOG_LEVEL: "{{ correctomatic.api.log_level }}"
       UPLOAD_DIRECTORY: "{{ correctomatic.shared_folder }}"
     volumes:

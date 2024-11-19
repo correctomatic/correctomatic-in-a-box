@@ -44,6 +44,7 @@ correctomatic:
     tag: latest
     log_level: debug
     port: 3000
+    jwt_expires_in: 30d
     db:
       name: "correctomatic"
       # Be sure that the locale is installed in the system, see roles/postgresql/tasks/main.yml

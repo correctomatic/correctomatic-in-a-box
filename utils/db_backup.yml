@@ -16,11 +16,6 @@
 
   tasks:
 
-    - name: Debug variables
-      debug:
-        var: app
-      tags: always
-
     - name: Add App database to the list of databases
       set_fact:
         db_list: "{{ db_list | default([]) + [correctomatic.app.db.name] }}"
@@ -41,7 +36,7 @@
             owner: postgres
             group: postgres
             mode: '0700'
-            
+
         - name: "Back up the database {{ item }}"
           postgresql_db:
             state: dump

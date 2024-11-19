@@ -1,0 +1,63 @@
+---
+- name: Restore PostgreSQL database from a specified backup file
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    backup_file_local: "{{ lookup('env', 'PWD') }}/{{ file }}" # Specified in command line with --extra-vars: -e file=whatever.dump.sql.gz
+    database: "{{ db }}" # Specified in command line with --extra-vars: -e db=app
+    backup_dir_remote: /tmp/db_backups
+
+  tasks:
+    - name: Validate the database name
+      fail:
+        msg: "Invalid database name '{{ db }}'. Must be 'app' or 'api'."
+      when: db not in ['app', 'api']
+
+    - name: Set database name
+      set_fact:
+        database: >-
+          {{ (
+            correctomatic.app.db.name if db == 'app'
+            else correctomatic.api.db.name if db == 'api'
+          ) | trim }}
+
+    - name: Confirm database restoration
+      pause:
+        prompt: >
+          You are about to restore the database '{{ database }}'
+          using the file '{{ backup_file_local }}'.
+          Type 'yes' to confirm or 'no' to abort.
+      register: confirmation
+
+    - name: Fail if confirmation is not 'yes'
+      fail:
+        msg: "Aborted by the user."
+      when: confirmation.user_input != 'yes'
+
+    - name: Ensure remote restore directory exists
+      file:
+        path: "{{ backup_dir_remote }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0700'
+
+    - name: Upload backup file to the remote server
+      copy:
+        src: "{{ backup_file_local }}"
+        dest: "{{ backup_dir_remote }}/{{ backup_file_local | basename }}"
+      register: upload_result
+
+    - name: Restore the database
+      postgresql_db:
+        state: restore
+        name: "{{ database }}"
+        target: "{{ backup_dir_remote }}/{{ backup_file_local | basename }}"
+      become: yes
+      become_user: postgres
+
+    - name: Remove remote restore file after restoration
+      file:
+        path: "{{ backup_dir_remote }}/{{ backup_file_local | basename }}"
+        state: absent

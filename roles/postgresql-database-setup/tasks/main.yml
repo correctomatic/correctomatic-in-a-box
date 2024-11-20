@@ -1,0 +1,35 @@
+- block:
+    - name: Ensure database for the application is present
+      postgresql_db:
+        name: "{{ db_name }}"
+        encoding: "{{ encoding }}"
+        lc_collate: "{{ lc_collate }}"
+        lc_ctype: "{{ lc_ctype }}"
+        template: template0
+
+    - name: Ensure PostgreSQL user exists
+      postgresql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        state: present
+
+    - name: Grant privileges on the database to the user
+      postgresql_query:
+        db: "{{ db_name }}"
+        query: |
+          GRANT ALL PRIVILEGES ON DATABASE {{ db_name }} TO {{ db_user }};
+          GRANT USAGE ON SCHEMA public TO {{ db_user }};
+          GRANT CREATE ON SCHEMA public TO {{ db_user }};
+
+    - name: Allow remote connections for the database user
+      lineinfile:
+        path: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
+        insertafter: "^#.*TYPE.*DATABASE.*USER.*ADDRESS.*METHOD"
+        line: "host    {{ db_name }}             {{ db_user }}    0.0.0.0/0    scram-sha-256"
+  become: true
+  become_user: postgres
+
+- name: Restart PostgreSQL
+  systemd:
+    name: postgresql
+    state: reloaded

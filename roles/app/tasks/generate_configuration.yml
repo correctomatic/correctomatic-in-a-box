@@ -23,11 +23,6 @@
     owner: root
     group: docker
 
-- name: Create the configuration file
-  template:
-    src: correctomatic.json.j2
-    dest: /correctomatic/app/config/correctomatic.json
-
 - name: Generate a private key
   community.crypto.openssl_privatekey:
     path: /correctomatic/app/config/private.key

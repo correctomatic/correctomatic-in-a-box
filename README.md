@@ -39,11 +39,33 @@ Run the playbook in production mode:
 ```sh
 ansible-playbook playbook.yml -i inventories/prod/hosts --ask-vault-pass
 ```
+If you want to run only a specific tag, you can use the `--tags` option. For example, to run only the `nginx` and `docker` roles:
 
+```sh
+ansible-playbook playbook.yml --tags docker,nginx
+```
 
 ## Working with the private registry
 
 The correctomatic works with a private registry (usually, the correction images are kept private) There is another file with [documentation on the private registry](README_registry.md)
+
+## Dumping and restoring the databases
+
+There are two databases, one for the API and one for the App. There is a playbook to dump them; the dumps are downloaded to `./backups` folder.
+You can run the playbook with tags if you want to dump only one of the databases. Omit the tags to dump both databases:
+```sh
+ansible-playbook utils/db_backup.yml --tags api,app
+```
+or, in production:
+```sh
+ansible-playbook utils/db_backup.yml --tags api,app -i inventories/prod/hosts --ask-vault-pass
+```
+
+There is also a playbook to restore the databases. You must provide the database name and the file to restore. For example, to restore the API database with a dump file:
+```sh
+ansible-playbook utils/db_restore.yml -e "db=api" -e "file=./backups/20241119065235_correctomatic.dump.sql.gz"
+```
+
 
 ## Development
 
@@ -168,6 +190,14 @@ docker image pull alpine:latext
 ```
 
 To switch back to the local context run `docker context use default`.
+
+#### Pretty logs
+
+There is a container, `pretty`, that can be used to format the logs of the correctomatic processes. You can use it like this:
+
+```sh
+docker logs --follow correctomatic-app | docker exec -i pretty pino-pretty
+```
 
 #### Test the connection using Dockerode
 

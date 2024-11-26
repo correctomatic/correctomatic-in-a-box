@@ -29,10 +29,11 @@
       name: python3-certbot-nginx
       state: present
 
+  # We need to stop the nginx server because certbot will try to bind to port 80
   - name: Setup cron job for certbot renewals
     cron:
       name: "Renew Let's Encrypt certificates"
-      job: "/usr/bin/certbot renew --quiet --renew-hook '/bin/systemctl reload nginx'"
+      job: "/bin/systemctl stop nginx && /usr/bin/certbot renew; /bin/systemctl start nginx"
       hour: 3
       minute: 0
 

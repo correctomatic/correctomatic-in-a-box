@@ -8,6 +8,7 @@
     src: "{{ item.src | default(omit) }}"
   loop:
     - { port: "{{ ssh_port }}", proto: "tcp", comment: "SSH access" }
+    - { port: 80, proto: "tcp", comment: "http for certificate renewal" }
     - { port: 443, proto: "tcp", comment: "https for Docker registry and Correctomatic app" }
     - { port: 5432, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "PostgreSQL from correctomatic network"  }
     - { port: 6379, proto: "tcp", src: "{{ correctomatic.network.subnet }}", comment: "Redis from correctomatic network"  }

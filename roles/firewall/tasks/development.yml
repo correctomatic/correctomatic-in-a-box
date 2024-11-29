@@ -9,6 +9,6 @@
     - { port: 2376, proto: "tcp", comment: "Docker server" }
     - { port: 6379, proto: "tcp", comment: "Redis server" }
     - { port: 5432, proto: "tcp", comment: "PostgreSQL server" }
-    - { port: "{{ correctomatic.api.port }}", proto: "tcp", comment: "Correctomatic API" }
+    - { port: "{{ correctomatic.api.internal_port }}", proto: "tcp", comment: "Correctomatic API" }
     - { port: "{{ correctomatic.app.internal_port }}", proto: "tcp", comment: "Correctomatic APP" }
   notify: reload ufw

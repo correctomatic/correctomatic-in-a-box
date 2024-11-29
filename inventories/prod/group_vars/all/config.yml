@@ -41,12 +41,11 @@ correctomatic:
 
   api:
     domain: "api.correctomatic.org"
-    internal_port: 6000
     max_upload_size: 20M
     image: correctomatic/api
     tag: latest
     log_level: debug
-    port: 3000
+    internal_port: 3000
     jwt_expires_in: 1h
     db:
       name: "correctomatic"

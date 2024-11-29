@@ -18,7 +18,7 @@
       DB_PASSWORD: "{{ app.db_password }}"
       DB_HOST: 'postgres'
       DB_PORT: '5432'
-      CORRECTOMATIC_API_SERVER: "http://host.docker.internal:{{ correctomatic.api.port }}"
+      CORRECTOMATIC_API_SERVER: "http://host.docker.internal:{{ correctomatic.api.internal_port }}"
       CORRECTOMATIC_API_KEY: "{{ app.api_key }}"
       CALLBACK_HOST: http://host.docker.internal:{{ correctomatic.app.internal_port }}
       UPLOAD_FOLDER: /uploads

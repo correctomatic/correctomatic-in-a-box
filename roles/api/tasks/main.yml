@@ -45,7 +45,7 @@
       # Exercises' folder
       - "{{ correctomatic.shared_folder }}:{{ correctomatic.shared_folder }}:rw"
     published_ports:
-      - "{{ correctomatic.api.port }}:3000"
+      - "{{ correctomatic.api.internal_port }}:3000"
     # Redis is running on the VPS
     etc_hosts:
       redis: "{{ correctomatic.network.gateway }}"

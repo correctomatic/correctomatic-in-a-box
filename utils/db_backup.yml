@@ -37,7 +37,7 @@
             group: postgres
             mode: '0700'
 
-        - name: "Back up the database {{ item }}"
+        - name: "Back up the databases"
           postgresql_db:
             state: dump
             name: "{{ item }}"

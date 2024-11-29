@@ -19,3 +19,5 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   notify: Restart Nginx
+
+- include_tasks: secure_nginx.yml

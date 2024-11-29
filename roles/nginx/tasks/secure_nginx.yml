@@ -1,0 +1,32 @@
+---
+# - name: Update NGINX security settings
+#   lineinfile:
+#     path: /etc/nginx/nginx.conf
+#     regexp: "{{ item.regexp }}"
+#     line: "{{ item.line }}"
+#     state: present
+#     owner: root
+#     group: root
+#     mode: '0644'
+#   notify: Restart Nginx
+#   with_items:
+#     - { regexp: '^#?server_tokens', line: 'server_tokens off;' }
+#     - { regexp: '^#?client_max_body_size', line: 'client_max_body_size 100M;' }
+#     - { regexp: '^#?ssl_prefer_server_ciphers', line: 'ssl_prefer_server_ciphers on;' }
+#     - { regexp: '^#?ssl_protocols', line: 'ssl_protocols TLSv1.2 TLSv1.3;' }
+#     - { regexp: '^#?ssl_ciphers', line: 'ssl_ciphers EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH;' }
+
+
+# Should I hidden the server more?
+# sudo apt-get install nginx-extras
+# more_set_headers 'Server: some-string-here';
+
+- name: Add server_tokens directive to the http context in nginx.conf
+  blockinfile:
+    path: /etc/nginx/nginx.conf
+    marker: "# {mark} MANAGED BY ANSIBLE"
+    block: |
+      # Security settings
+      server_tokens off;
+    insertafter: "http {"
+  notify: Restart Nginx

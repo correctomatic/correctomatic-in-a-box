@@ -45,6 +45,10 @@ If you want to run only a specific tag, you can use the `--tags` option. For exa
 ansible-playbook playbook.yml --tags docker,nginx
 ```
 
+## Accessing the API
+
+TO-DO: nginx configuration for the API
+
 ## Working with the private registry
 
 The correctomatic works with a private registry (usually, the correction images are kept private) There is another file with [documentation on the private registry](README_registry.md)

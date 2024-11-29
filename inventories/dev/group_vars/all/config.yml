@@ -40,6 +40,9 @@ correctomatic:
     gateway: "172.20.0.1"
 
   api:
+    domain: "dev.api.correctomatic.org"
+    internal_port: 6000
+    max_upload_size: 10M
     image: correctomatic/api
     tag: latest
     log_level: debug

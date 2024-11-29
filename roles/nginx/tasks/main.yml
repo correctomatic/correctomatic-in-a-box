@@ -7,6 +7,8 @@
         domain: "{{ registry.domain }}"
       - name: "app"
         domain: "{{ correctomatic.app.domain }}"
+      - name: "api"
+        domain: "{{ correctomatic.api.domain }}"
 
 - include_tasks: setup_nginx.yml
 

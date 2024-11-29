@@ -1,5 +1,5 @@
 ---
-- name: Create directory for SSL certificate
+- name: Create directory for SSL certificate for {{ domain }}
   file:
     path: "/etc/letsencrypt/live/{{ domain }}"
     state: directory
@@ -8,7 +8,7 @@
     group: root
 
 # Ansible doesn't generate certificates if they already exist
-- name: Generate SSL private key
+- name: Generate SSL private key for {{ domain }}
   openssl_privatekey:
     path: "/etc/letsencrypt/live/{{ domain }}/privkey.pem"
     size: 4096
@@ -20,7 +20,7 @@
     common_name: "{{ domain }}"
     state: present
 
-- name: Generate Self-Signed SSL certificate
+- name: Generate Self-Signed SSL certificate for {{ domain }}
   openssl_certificate:
     path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
     privatekey_path: "/etc/letsencrypt/live/{{ domain }}/privkey.pem"
